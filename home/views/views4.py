@@ -28,6 +28,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model  # Add this import
 from home.models import Customers  # Using your existing models
 from django.http import JsonResponse
+account_sid = 'AC09b6c386c220d7d6cbd24145c9f22b41'
+auth_token = 'aa31693c5cec3f4cbfcacf1d414ea9fe'
+smsclient = Client(account_sid, auth_token)
 import cv2
 import numpy as np
 from PIL import Image
@@ -544,7 +547,9 @@ def surveillance2(request):
 def send_message(to_num, msg):
     try:
         # Your Twilio account credentials
-    
+        account_sid = 'AC09b6c386c220d7d6cbd24145c9f22b41'
+        auth_token = 'aa31693c5cec3f4cbfcacf1d414ea9fe'
+        
         # Create a Twilio client
         client = Client(account_sid, auth_token)
         
