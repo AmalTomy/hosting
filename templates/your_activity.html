@@ -1,0 +1,801 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Bookings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #FFFFFF; /* White */
+            display: flex;
+            flex-direction: column;
+            color: #333333; /* Dark Gray text color */
+        }
+        .booking-card {
+            transition: transform 0.3s ease-in-out;
+            background-color: #F0F0F0; /* Light Gray */
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        .booking-card:hover {
+            transform: translateY(-5px);
+        }
+        .modal-content {
+            background-color: #FFFFFF; /* White */
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .modal-header {
+            background-color: #2C3E50; /* Deep Blue */
+            color: #FFFFFF; /* White text */
+            border-bottom: none;
+        }
+        .modal-body {
+            padding: 30px;
+            color: #333333; /* Dark Gray text */
+        }
+        .section {
+            background-color: #F0F0F0; /* Light Gray */
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .section h6 {
+            color: #2C3E50; /* Deep Blue */
+            margin-bottom: 15px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #2C3E50; /* Deep Blue */
+        }
+        .info-value {
+            color: #333333; /* Dark Gray */
+        }
+        .download-btn {
+            background-color: #1ABC9C; /* Teal */
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            color: #FFFFFF; /* White text */
+        }
+        .download-btn:hover {
+            background-color: #16A085; /* Darker Teal */
+        }
+        .close-btn {
+            background-color: transparent;
+            border: none;
+            color: #FFFFFF; /* White */
+            font-size: 24px;
+        }
+
+        /* New styles for header and footer */
+        .header {
+            background-color: #2C3E50 !important; /* Deep Blue */
+            color: #FFFFFF !important; /* White */
+            padding: 15px 0;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .content-wrapper {
+            flex: 1 0 auto;
+            padding: 20px 0;
+        }
+        .footer {
+            background-color: #2C3E50; /* Deep Blue */
+            color: #FFFFFF; /* White */
+            padding: 20px 0;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .btn-primary {
+            background-color: #2ECC71; /* Mint Green */
+            border-color: #2ECC71;
+            color: #FFFFFF; /* White text */
+        }
+        .btn-primary:hover {
+            background-color: #27AE60; /* Darker Mint Green */
+            border-color: #27AE60;
+        }
+        h1 {
+            color: #2C3E50; /* Deep Blue */
+        }
+        .navbar-logo {
+    height: 40px; /* Adjust this value as needed */
+        width: auto;
+        border-radius: 50%; /* This makes the image circular */
+    }
+
+    /* Updated header styles with !important to override any conflicting styles */
+    .header {
+        background-color: #2C3E50 !important; /* Deep Blue */
+        color: #FFFFFF !important; /* White */
+        padding: 15px 0;
+    }
+
+    .header .nav-link {
+        color: #FFFFFF !important; /* White */
+        text-decoration: none;
+    }
+
+    .header .nav-link:hover {
+        color: #FFFFFF !important; /* Keep it white on hover */
+        text-decoration: underline; /* Add underline on hover for better UX */
+    }
+
+    /* Ensure the logo container doesn't have a background */
+    .navbar-brand {
+        background-color: transparent !important;
+    }
+
+    /* Additional style to force text color in header */
+    .header * {
+        color: #FFFFFF !important;
+    }
+
+    /* New styles for enhanced visual appeal */
+    .content-wrapper {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 40px 0;
+    }
+
+    h1 {
+        color: #2C3E50;
+        text-align: center;
+        font-size: 3rem;
+        margin-bottom: 2rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        animation: fadeInDown 1s ease-out;
+    }
+
+    .booking-card {
+        transition: all 0.3s ease-in-out;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transform: translateY(0);
+    }
+
+    .booking-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #2C3E50;
+    }
+
+    .card-text {
+        color: #34495E;
+        margin-bottom: 0.5rem;
+    }
+
+    .btn-primary, .btn-outline-primary {
+        border-radius: 25px;
+        padding: 0.5rem 1rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover, .btn-outline-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .date-header {
+        background-color: #2C3E50;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        display: inline-block;
+        margin-bottom: 1rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        animation: slideInLeft 0.5s ease-out;
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .booking-card {
+        animation: fadeIn 0.5s ease-out;
+        animation-fill-mode: both;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Modal enhancements */
+    .modal-content {
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #2C3E50 0%, #4CA1AF 100%);
+        color: white;
+        border-bottom: none;
+    }
+
+    .modal-body {
+        padding: 2rem;
+    }
+
+    .section {
+        background-color: #f8f9fa;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .info-row {
+        margin-bottom: 0.8rem;
+    }
+
+    .info-label {
+        font-weight: bold;
+        color: #2C3E50;
+    }
+
+    .info-value {
+        color: #34495E;
+    }
+
+    .download-btn {
+        background: linear-gradient(135deg, #1ABC9C 0%, #16A085 100%);
+        border: none;
+        border-radius: 25px;
+        padding: 10px 25px;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .download-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Animated Download Button Styles */
+    .download-container {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .download-label {
+        background-color: transparent;
+        border: 2px solid rgb(91, 91, 240);
+        display: flex;
+        align-items: center;
+        border-radius: 50px;
+        width: 160px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        padding: 5px;
+        position: relative;
+    }
+
+    .download-label::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        width: 8px;
+        height: 8px;
+        transition: all 0.4s ease;
+        border-radius: 100%;
+        margin: auto;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .download-label .input {
+        display: none;
+    }
+
+    .download-label .title {
+        font-size: 17px;
+        color: #fff;
+        transition: all 0.4s ease;
+        position: absolute;
+        right: 18px;
+        bottom: 14px;
+        text-align: center;
+    }
+
+    .download-label .title:last-child {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .download-label .circle {
+        height: 45px;
+        width: 45px;
+        border-radius: 50%;
+        background-color: rgb(91, 91, 240);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.4s ease;
+        position: relative;
+        box-shadow: 0 0 0 0 rgb(255, 255, 255);
+        overflow: hidden;
+    }
+
+    .download-label .circle .icon {
+        color: #fff;
+        width: 30px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.4s ease;
+    }
+
+    .download-label .circle .square {
+        aspect-ratio: 1;
+        width: 15px;
+        border-radius: 2px;
+        background-color: #fff;
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.4s ease;
+    }
+
+    .download-label .circle::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-color: #3333a8;
+        width: 100%;
+        height: 0;
+        transition: all 0.4s ease;
+    }
+
+    .download-label:has(.input:checked) {
+        width: 57px;
+        animation: installed 0.4s ease 3.5s forwards;
+    }
+
+    .download-label:has(.input:checked)::before {
+        animation: rotate 3s ease-in-out 0.4s forwards;
+    }
+
+    .download-label .input:checked + .circle {
+        animation: pulse 1s forwards, circleDelete 0.2s ease 3.5s forwards;
+        rotate: 180deg;
+    }
+
+    .download-label .input:checked + .circle::before {
+        animation: installing 3s ease-in-out forwards;
+    }
+
+    .download-label .input:checked + .circle .icon {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .download-label .input:checked ~ .circle .square {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .download-label .input:checked ~ .title {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .download-label .input:checked ~ .title:last-child {
+        animation: showInstalledMessage 0.4s ease 3.5s forwards;
+    }
+
+    @keyframes pulse {
+        0% {
+            scale: 0.95;
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+        }
+        70% {
+            scale: 1;
+            box-shadow: 0 0 0 16px rgba(255, 255, 255, 0);
+        }
+        100% {
+            scale: 0.95;
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+        }
+    }
+
+    @keyframes installing {
+        from {
+            height: 0;
+        }
+        to {
+            height: 100%;
+        }
+    }
+
+    @keyframes rotate {
+        0% {
+            transform: rotate(-90deg) translate(27px) rotate(0);
+            opacity: 1;
+            visibility: visible;
+        }
+        99% {
+            transform: rotate(270deg) translate(27px) rotate(270deg);
+            opacity: 1;
+            visibility: visible;
+        }
+        100% {
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+
+    @keyframes installed {
+        100% {
+            width: 150px;
+            border-color: rgb(35, 174, 35);
+        }
+    }
+
+    @keyframes circleDelete {
+        100% {
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+
+    @keyframes showInstalledMessage {
+        100% {
+            opacity: 1;
+            visibility: visible;
+            right: 56px;
+        }
+    }
+
+    /* New Download Button Styles */
+    .Btn {
+        width: 50px;
+        height: 50px;
+        border: none;
+        border-radius: 50%;
+        background-color: rgb(27, 27, 27);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        transition-duration: .3s;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.11);
+    }
+
+    .svgIcon {
+        fill: rgb(214, 178, 255);
+    }
+
+    .icon2 {
+        width: 18px;
+        height: 5px;
+        border-bottom: 2px solid rgb(182, 143, 255);
+        border-left: 2px solid rgb(182, 143, 255);
+        border-right: 2px solid rgb(182, 143, 255);
+    }
+
+    .tooltip {
+        position: absolute;
+        right: -105px;
+        opacity: 0;
+        background-color: rgb(12, 12, 12);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition-duration: .2s;
+        pointer-events: none;
+        letter-spacing: 0.5px;
+    }
+
+    .tooltip::before {
+        position: absolute;
+        content: "";
+        width: 10px;
+        height: 10px;
+        background-color: rgb(12, 12, 12);
+        background-size: 1000%;
+        background-position: center;
+        transform: rotate(45deg);
+        left: -5%;
+        transition-duration: .3s;
+    }
+
+    .Btn:hover .tooltip {
+        opacity: 1;
+        transition-duration: .3s;
+    }
+
+    .Btn:hover {
+        background-color: rgb(150, 94, 255);
+        transition-duration: .3s;
+    }
+
+    .Btn:hover .icon2 {
+        border-bottom: 2px solid rgb(235, 235, 235);
+        border-left: 2px solid rgb(235, 235, 235);
+        border-right: 2px solid rgb(235, 235, 235);
+    }
+
+    .Btn:hover .svgIcon {
+        fill: rgb(255, 255, 255);
+        animation: slide-in-top 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    }
+
+    @keyframes slide-in-top {
+        0% {
+            transform: translateY(-10px);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateY(0px);
+            opacity: 1;
+        }
+    }
+
+    /* Add new styles for the form layout */
+    .form-inline {
+        display: flex;
+        align-items: flex-end;
+        gap: 15px;
+        flex-wrap: nowrap;
+    }
+    
+    .form-inline .form-group {
+        flex: 1;
+        margin-bottom: 0;
+        min-width: 200px;
+    }
+    
+    .form-inline .download-button-container {
+        margin-bottom: 0;
+        display: flex;
+        align-items: flex-end;
+    }
+
+    .form-inline label {
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .form-inline select,
+    .form-inline input {
+        width: 100%;
+    }
+
+    /* Adjust the download button to align with inputs */
+    .form-inline .Btn {
+        margin-bottom: 0;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    </style>
+</head>
+<body>
+    <!-- New header -->
+    <header class="header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <a class="navbar-brand" href="{% url 'welcome' %}">
+                    <img src="{% static 'images/airplane.gif' %}" alt="TBSC Logo" class="navbar-logo">
+                </a>
+                <a class="nav-link page-scroll" href="{% url 'welcome' %}">HOME</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="content-wrapper">
+        <div class="container my-5">
+            <h1 class="text-center mb-5">My Activity</h1>
+            
+            <!-- Add Month Selection and Download Button -->
+            <div class="section">
+                <div class="section-title">Generate Activity Report</div>
+                <form method="POST" action="{% url 'generate_activity_report' %}" class="mb-4" id="downloadForm">
+                    {% csrf_token %}
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label for="startMonth" class="form-label">From Month</label>
+                            <input type="month" class="form-control" id="startMonth" name="startMonth" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endMonth" class="form-label">To Month</label>
+                            <input type="month" class="form-control" id="endMonth" name="endMonth" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reportType" class="form-label">Select Report Type</label>
+                            <select class="form-select" id="reportType" name="reportType" required>
+                                <option value="">Choose report type...</option>
+                                <option value="bookings">Bus Bookings Only</option>
+                                <option value="payments">Payment History Only</option>
+                                <option value="cancellations">Cancellations Only</option>
+                            </select>
+                        </div>
+                        <div class="download-button-container">
+                            <button type="submit" class="Btn">
+                                <svg class="svgIcon" viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path>
+                                </svg>
+                                <span class="icon2"></span>
+                                <span class="tooltip">Download</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Keep your existing bookings container -->
+            <div id="bookings-container" class="row">
+                <!-- Bookings will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="bookingDetailsModal" tabindex="-1" aria-labelledby="bookingDetailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bookingDetailsModalLabel">Booking Details</h5>
+                        <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="bookingDetailsContent">
+                        <!-- Booking details will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 TBSC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Add this new script at the end of the body -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set max date to current month
+            const today = new Date();
+            const maxMonth = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
+            
+            // Set max attribute for both month inputs
+            document.getElementById('startMonth').setAttribute('max', maxMonth);
+            document.getElementById('endMonth').setAttribute('max', maxMonth);
+
+            // When startMonth changes, update endMonth min
+            document.getElementById('startMonth').addEventListener('change', function() {
+                document.getElementById('endMonth').setAttribute('min', this.value);
+                if (document.getElementById('endMonth').value && this.value > document.getElementById('endMonth').value) {
+                    document.getElementById('endMonth').value = this.value;
+                }
+            });
+
+            // When endMonth changes, update startMonth max
+            document.getElementById('endMonth').addEventListener('change', function() {
+                if (this.value) {
+                    document.getElementById('startMonth').setAttribute('max', this.value);
+                    if (document.getElementById('startMonth').value > this.value) {
+                        document.getElementById('startMonth').value = this.value;
+                    }
+                }
+            });
+
+            // Form submission handling
+            document.getElementById('downloadForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const startMonth = document.getElementById('startMonth').value;
+                const endMonth = document.getElementById('endMonth').value;
+                const reportType = document.getElementById('reportType').value;
+
+                if (!startMonth || !endMonth) {
+                    alert('Please select both start and end months');
+                    return;
+                }
+
+                if (startMonth > endMonth) {
+                    alert('Start month cannot be after end month');
+                    return;
+                }
+
+                if (!reportType) {
+                    alert('Please select a report type');
+                    return;
+                }
+
+                this.submit();
+            });
+        });
+    </script>
+</body>
+</html>

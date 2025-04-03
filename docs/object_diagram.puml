@@ -1,0 +1,332 @@
+@startuml User_Management
+!theme plain
+skinparam linetype ortho
+skinparam objectAttributeIconSize 0
+skinparam nodesep 50
+skinparam ranksep 50
+hide circle
+page 2x2
+skinparam pageMargin 10
+skinparam pageExternalColor gray
+skinparam pageBorderColor black
+
+title User Management Objects
+
+' User Management Objects
+object "john:Users" as user1 {
+    id = 1
+    username = "john_doe"
+    email = "john@example.com"
+    user_type = "customer"
+    status = "active"
+}
+
+object "alice:Users" as user2 {
+    id = 2
+    username = "alice_smith"
+    email = "alice@example.com"
+    user_type = "moderator"
+    status = "active"
+}
+
+object "bob:Customers" as customer1 {
+    customer_id = 1
+    first_name = "Bob"
+    last_name = "Wilson"
+    phone = "+1234567890"
+    city = "New York"
+}
+
+object "mod1:Moderator" as moderator1 {
+    moderator_id = 1
+    first_name = "Alice"
+    last_name = "Smith"
+    mobile = "+9876543210"
+    company = "Travel Corp"
+}
+
+object "agent1:Agent" as agent1 {
+    agent_id = 1
+    first_name = "Mike"
+    last_name = "Johnson"
+    mobile = "+1122334455"
+    company = "Safety First"
+}
+
+object "police1:Police" as police1 {
+    id = 1
+    policestation = "Central Station"
+    location = "Downtown"
+    phnnum = "+9988776655"
+}
+
+' User Management Relationships
+user1 --> customer1
+user2 --> moderator1
+user1 --> agent1
+user1 --> police1
+
+@enduml
+
+@startuml Bus_Management
+!theme plain
+skinparam linetype ortho
+skinparam objectAttributeIconSize 0
+skinparam nodesep 50
+skinparam ranksep 50
+hide circle
+page 2x2
+skinparam pageMargin 10
+skinparam pageExternalColor gray
+skinparam pageBorderColor black
+
+title Bus Management and Booking Objects
+
+' Bus Objects
+object "bus1:Bus" as bus1 {
+    bus_id = 1
+    bus_name = "Express Line 1"
+    bus_number = "KL-01-AB-1234"
+    seating_capacity = 40
+    status = "active"
+}
+
+object "busImage1:BusImage" as busImage1 {
+    id = 1
+    image = "bus1_front.jpg"
+    uploaded_at = "2025-01-25"
+}
+
+object "driver1:DriversInfo" as driver1 {
+    driver_id = 1
+    name = "David Brown"
+    license = "DL123456"
+    contact_number = "+1122334455"
+}
+
+object "route1:Location" as location1 {
+    location_id = 1
+    source = "New York"
+    destination = "Boston"
+    stops = "Hartford,Springfield"
+}
+
+object "booking1:BusBooking" as booking1 {
+    booking_id = 1
+    num_tickets = 2
+    total_amount = 150.00
+    booking_date = "2025-01-25"
+    payment_status = "completed"
+}
+
+object "payment1:Payment" as payment1 {
+    payment_id = 1
+    amount = 150.00
+    status = "success"
+    payment_method = "credit_card"
+}
+
+object "feedback1:Feedback" as feedback1 {
+    id = 1
+    rating = 5
+    comment = "Great service!"
+    created_at = "2025-01-25"
+}
+
+object "reschedule1:BusReschedule" as reschedule1 {
+    id = 1
+    old_departure_time = "09:00"
+    new_departure_time = "10:00"
+}
+
+' Bus Management Relationships
+moderator1 --> bus1
+bus1 --> busImage1
+bus1 --> driver1
+bus1 --> location1
+bus1 --> booking1
+booking1 --> payment1
+booking1 --> feedback1
+customer1 --> booking1
+bus1 --> reschedule1
+moderator1 --> reschedule1
+
+@enduml
+
+@startuml Tour_Package
+!theme plain
+skinparam linetype ortho
+skinparam objectAttributeIconSize 0
+skinparam nodesep 50
+skinparam ranksep 50
+hide circle
+page 2x2
+skinparam pageMargin 10
+skinparam pageExternalColor gray
+skinparam pageBorderColor black
+
+title Tour Package Objects
+
+' Tour Package Objects
+object "package1:TourPackage" as package1 {
+    id = 1
+    title = "New England Tour"
+    destination = "Boston"
+    duration_days = 5
+    price = 999.99
+}
+
+object "day1:PackageDay" as day1 {
+    id = 1
+    day_number = 1
+    title = "Boston City Tour"
+    meals_included = "breakfast,lunch"
+}
+
+object "activity1:PackageActivity" as activity1 {
+    id = 1
+    activity_name = "Freedom Trail Walk"
+    duration = "3 hours"
+    location = "Boston"
+}
+
+object "policy1:PackagePolicy" as policy1 {
+    id = 1
+    cancellation_policy = "Free cancellation up to 24 hours"
+    refund_policy = "Full refund if cancelled in advance"
+}
+
+object "packageBooking1:PackageBooking" as packageBooking1 {
+    booking_id = 1
+    num_travelers = 2
+    total_amount = 1999.98
+    booking_date = "2025-01-25"
+}
+
+object "packageImage1:PackageImage" as packageImage1 {
+    id = 1
+    image = "boston_tour.jpg"
+    is_main = true
+}
+
+' Tour Package Relationships
+package1 --> day1
+day1 --> activity1
+package1 --> policy1
+package1 --> packageBooking1
+package1 --> packageImage1
+
+@enduml
+
+@startuml Safety_Communication
+!theme plain
+skinparam linetype ortho
+skinparam objectAttributeIconSize 0
+skinparam nodesep 50
+skinparam ranksep 50
+hide circle
+page 2x2
+skinparam pageMargin 10
+skinparam pageExternalColor gray
+skinparam pageBorderColor black
+
+title Safety and Communication Objects
+
+together {
+    ' Safety Objects
+    object "safety1:SafetyNotification" as safety1 {
+        id = 1
+        type = "alert"
+        message = "Weather warning"
+    }
+
+    object "report1:SafetyNotificationReport" as report1 {
+        report_id = 1
+        report_title = "Route Update"
+        status = "resolved"
+    }
+
+    object "missing1:MissingPerson" as missing1 {
+        id = 1
+        first_name = "Jane"
+        status = "found"
+    }
+
+    object "detected1:Detected" as detected1 {
+        id = 1
+        location = "Springfield"
+    }
+}
+
+together {
+    ' Communication Objects
+    object "notification1:Notification" as notification1 {
+        id = 1
+        message = "Booking confirmed"
+    }
+
+    object "chat1:ChatMessage" as chat1 {
+        id = 1
+        content = "Bus departure?"
+    }
+
+    object "userLoc1:UserLocation" as userLoc1 {
+        id = 1
+        latitude = 40.7128
+        longitude = -74.0060
+    }
+}
+
+together {
+    ' Report Objects
+    object "travelReport1:TravelReport" as travelReport1 {
+        id = 1
+        departure = "New York"
+        status = "completed"
+    }
+
+    object "reportPhoto1:ReportPhoto" as reportPhoto1 {
+        id = 1
+        image = "trip_photo.jpg"
+    }
+}
+
+together {
+    object "agentJob1:AgentJob" as agentJob1 {
+        job_id = 1
+        status = "assigned"
+    }
+
+    object "safetyMedia1:SafetyReportMedia" as safetyMedia1 {
+        id = 1
+        file = "incident_photo.jpg"
+    }
+}
+
+' Layout hints
+safety1 -[hidden]right- report1
+report1 -[hidden]right- missing1
+missing1 -[hidden]right- detected1
+
+notification1 -[hidden]right- chat1
+chat1 -[hidden]right- userLoc1
+
+detected1 -[hidden]down- travelReport1
+travelReport1 -[hidden]right- reportPhoto1
+
+agentJob1 -[hidden]right- safetyMedia1
+
+' Safety and Communication Relationships
+bus1 --> report1
+agent1 --> report1
+police1 --> missing1
+missing1 --> detected1
+user1 --> notification1
+user1 --> chat1
+user1 --> userLoc1
+user1 --> travelReport1
+travelReport1 --> reportPhoto1
+agent1 --> agentJob1
+report1 --> safetyMedia1
+
+@enduml

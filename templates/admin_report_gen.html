@@ -1,0 +1,818 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBSC Admin Report Generation</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #858796;
+            --success-color: #1cc88a;
+            --info-color: #36b9cc;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --light-color: #f8f9fc;
+            --dark-color: #5a5c69;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f8f9fc;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar Styles */
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            min-height: 100vh;
+            transition: all 0.3s;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            z-index: 1;
+        }
+        
+        #sidebar.active {
+            margin-left: -250px;
+        }
+        
+        #sidebar .sidebar-header {
+            padding: 20px;
+            background: #343a40;
+            text-align: center;
+        }
+        
+        #sidebar ul.components {
+            padding: 20px 0;
+        }
+        
+        #sidebar ul li a {
+            padding: 10px 20px;
+            font-size: 1.1em;
+            display: block;
+            color: #f8f9fc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        #sidebar ul li a:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        #sidebar ul li.active > a {
+            color: #fff;
+            background: var(--primary-color);
+        }
+        
+        #sidebar ul li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Content Styles */
+        #content {
+            width: 100%;
+            min-height: 100vh;
+            transition: all 0.3s;
+            padding-bottom: 30px;
+        }
+        
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid #e3e6f0;
+        }
+        
+        .card-header h6 {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+        }
+        
+        /* Form Styles */
+        .form-control, .form-select {
+            border-radius: 0.35rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            border: 1px solid #d1d3e2;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #bac8f3;
+            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Button Styles */
+        .btn {
+            border-radius: 0.35rem;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2e59d9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #717384;
+            border-color: #717384;
+            transform: translateY(-2px);
+        }
+        
+        /* Table Styles */
+        .table {
+            color: #5a5c69;
+        }
+        
+        .table th {
+            font-weight: 700;
+            background-color: #f8f9fc;
+            border-top: none;
+        }
+        
+        /* Animation Styles */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .slide-in-up {
+            animation: slideInUp 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideInUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Border Cards */
+        .border-left-primary {
+            border-left: 0.25rem solid var(--primary-color) !important;
+        }
+        
+        .border-left-success {
+            border-left: 0.25rem solid var(--success-color) !important;
+        }
+        
+        .border-left-info {
+            border-left: 0.25rem solid var(--info-color) !important;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            #sidebar {
+                margin-left: -250px;
+            }
+            #sidebar.active {
+                margin-left: 0;
+            }
+            #content {
+                width: 100%;
+            }
+        }
+        
+        /* Breadcrumb Styles */
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin-bottom: 0;
+        }
+        
+        .breadcrumb-item a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        /* Footer Styles */
+        .sticky-footer {
+            padding: 1.5rem 0;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="bg-dark text-light">
+            <div class="sidebar-header">
+                <img src="{% static 'images/bus.gif' %}" alt="TBSC Icon" class="rounded-circle" style="width: 40px; height: 40px;">
+                <h5 class="text-white mt-3">LogU Travel Agency</h5>
+            </div>
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="{% url 'admin1' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="/addpolice"><i class="fas fa-building"></i> Police Stations</a>
+                </li>
+                <li>
+                    <a href="/viewpolice"><i class="fas fa-list"></i> View Police</a>
+                </li>
+                <li>
+                    <a href="/missing3"><i class="fas fa-search"></i> Missing Cases</a>
+                </li>
+                <li>
+                    <a href="{% url 'customer_details' %}"><i class="fas fa-users"></i> Customers</a>
+                </li>
+                <li>
+                    <a href="{% url 'mod_req_details' %}"><i class="fas fa-envelope"></i> Mod Requests</a>
+                </li>
+                <li>
+                    <a href="{% url 'moderator_details' %}"><i class="fas fa-user-tie"></i> Moderators</a>
+                </li>
+                <li>
+                    <a href="{% url 'agent_requests' %}"><i class="fas fa-envelope"></i> Agent Requests</a>
+                </li>
+                <li>
+                    <a href="{% url 'agent_details' %}"><i class="fas fa-user"></i> Agents</a>
+                </li>
+                <li>
+                    <a href="{% url 'bus_details' %}"><i class="fas fa-bus"></i> Buses</a>
+                </li>
+                <li>
+                    <a href="{% url 'admin_bus_bookings' %}"><i class="fas fa-book-open"></i> Bus Bookings</a>
+                </li>
+                <li>
+                    <a href="{% url 'add_locations' %}"><i class="fas fa-map-marker-alt"></i> Locations</a>
+                </li>
+                <li>
+                    <a href="{% url 'admin_add_news' %}"><i class="fas fa-newspaper"></i> News</a>
+                </li>
+                <li class="active">
+                    <a href="{% url 'admin_report_gen' %}"><i class="fas fa-file-alt"></i> Reports</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content" class="bg-light">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white rounded-3">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown me-3">
+                            <button class="btn btn-light dropdown-toggle" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-bell"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    3
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                                <li><h6 class="dropdown-header">Notifications</h6></li>
+                                <li><a class="dropdown-item" href="#">New booking request</a></li>
+                                <li><a class="dropdown-item" href="#">New agent application</a></li>
+                                <li><a class="dropdown-item" href="#">System update available</a></li>
+                            </ul>
+                        </div>
+                        <a href="{% url 'signout' %}" class="btn btn-outline-danger">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Page Header -->
+            <div class="container-fluid mb-4 fade-in">
+                <div class="d-sm-flex align-items-center justify-content-between">
+                    <h1 class="h3 mb-0 text-gray-800">Report Generation</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{% url 'admin1' %}">Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Reports</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Report Generation Section -->
+            <div class="container-fluid mt-4">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow mb-4 slide-in-up">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">
+                                    <i class="fas fa-sliders-h me-2"></i> Report Parameters
+                                </h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownMenuLink">
+                                        <li><a class="dropdown-item" href="#"><i class="fas fa-question-circle me-2"></i> Help</a></li>
+                                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <form id="reportForm" method="post" action="{% url 'generate_admin_report' %}">
+                                    {% csrf_token %}
+                                    <div class="row mb-4">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="reportType" class="form-label">
+                                                    <i class="fas fa-file-alt me-2"></i> Report Type
+                                                </label>
+                                                <select class="form-select" id="reportType" name="report_type" required>
+                                                    <option value="" selected disabled>Select Report Type</option>
+                                                    <option value="bookings">Bus Bookings</option>
+                                                    <option value="customers">Customers</option>
+                                                    <option value="agents">Agents</option>
+                                                    <option value="moderators">Moderators</option>
+                                                    <option value="missing_cases">Missing Cases</option>
+                                                    <option value="revenue">Revenue</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="dateRangeType" class="form-label">
+                                                    <i class="fas fa-calendar-alt me-2"></i> Date Range Type
+                                                </label>
+                                                <select class="form-select" id="dateRangeType" name="date_range_type" required>
+                                                    <option value="" selected disabled>Select Date Range Type</option>
+                                                    <option value="custom">Custom Date Range</option>
+                                                    <option value="month">Month Range</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="fileFormat" class="form-label">
+                                                    <i class="fas fa-file-export me-2"></i> File Format
+                                                </label>
+                                                <select class="form-select" id="fileFormat" name="file_format" required>
+                                                    <option value="csv">CSV</option>
+                                                    <option value="pdf">PDF</option>
+                                                    <option value="excel">Excel</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Custom Date Range Fields (hidden by default) -->
+                                    <div class="row mb-4" id="customDateFields" style="display: none;">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="startDate" class="form-label">
+                                                    <i class="fas fa-calendar-day me-2"></i> Start Date
+                                                </label>
+                                                <input type="date" class="form-control" id="startDate" name="start_date">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="endDate" class="form-label">
+                                                    <i class="fas fa-calendar-day me-2"></i> End Date
+                                                </label>
+                                                <input type="date" class="form-control" id="endDate" name="end_date">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Month Range Fields (hidden by default) -->
+                                    <div class="row mb-4" id="monthRangeFields" style="display: none;">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="startMonth" class="form-label">
+                                                    <i class="fas fa-calendar-alt me-2"></i> Start Month
+                                                </label>
+                                                <input type="month" class="form-control" id="startMonth" name="start_month">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="endMonth" class="form-label">
+                                                    <i class="fas fa-calendar-alt me-2"></i> End Month
+                                                </label>
+                                                <input type="month" class="form-control" id="endMonth" name="end_month">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-download me-2"></i> Generate Report
+                                        </button>
+                                        <button type="button" id="previewButton" class="btn btn-secondary btn-lg ms-2">
+                                            <i class="fas fa-eye me-2"></i> Preview Report
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Preview Section -->
+            <div class="container-fluid mt-4">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow mb-4 slide-in-up" style="animation-delay: 0.2s;">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">
+                                    <i class="fas fa-table me-2"></i> Report Preview
+                                </h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="previewDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="previewDropdownMenuLink">
+                                        <li><a class="dropdown-item" href="#" id="printPreview"><i class="fas fa-print me-2"></i> Print Preview</a></li>
+                                        <li><a class="dropdown-item" href="#" id="refreshPreview"><i class="fas fa-sync me-2"></i> Refresh</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info fade-in">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-info-circle fa-2x me-3"></i>
+                                        <div>
+                                            <h5 class="alert-heading">How to generate reports</h5>
+                                            <p class="mb-0">Select report parameters above and click "Preview Report" to view a sample, or "Generate Report" to download the full report.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="reportPreview" class="mt-4">
+                                    <!-- Report preview will be displayed here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Tips Section -->
+            <div class="container-fluid mt-4 mb-5">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2 slide-in-up" style="animation-delay: 0.3s;">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tip</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Export to Excel</div>
+                                        <p class="mt-2 mb-0">Use Excel format for data that needs further analysis or manipulation.</p>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-file-excel fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card border-left-success shadow h-100 py-2 slide-in-up" style="animation-delay: 0.4s;">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Tip</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">PDF Reports</div>
+                                        <p class="mt-2 mb-0">PDF format is best for sharing reports that shouldn't be modified.</p>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-file-pdf fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card border-left-info shadow h-100 py-2 slide-in-up" style="animation-delay: 0.5s;">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tip</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">CSV Format</div>
+                                        <p class="mt-2 mb-0">CSV is ideal for importing data into other systems or databases.</p>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-file-csv fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white mt-5">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; LogU Travel Agency 2025</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Toggle sidebar
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+            
+            // Show/hide date fields based on selected date range type
+            $('#dateRangeType').on('change', function() {
+                const selectedValue = $(this).val();
+                if (selectedValue === 'custom') {
+                    $('#customDateFields').slideDown(300);
+                    $('#monthRangeFields').slideUp(300);
+                } else if (selectedValue === 'month') {
+                    $('#monthRangeFields').slideDown(300);
+                    $('#customDateFields').slideUp(300);
+                } else {
+                    $('#customDateFields').slideUp(300);
+                    $('#monthRangeFields').slideUp(300);
+                }
+            });
+            
+            // Function to load report preview with pagination
+            function loadReportPreview(page = 1) {
+                // Show loading spinner
+                $('#reportPreview').html(`
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Loading report preview...</p>
+                    </div>
+                `);
+                
+                // Get form data
+                const formData = new FormData($('#reportForm')[0]);
+                
+                // Add page number to form data
+                formData.append('page', page);
+                
+                // Send AJAX request
+                $.ajax({
+                    url: "{% url 'preview_admin_report' %}",
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            // Create table with data
+                            let tableHtml = '<div class="table-responsive">';
+                            tableHtml += '<table class="table table-bordered table-hover" id="previewTable">';
+                            
+                            // Table header
+                            tableHtml += '<thead class="table-light"><tr>';
+                            response.columns.forEach(column => {
+                                tableHtml += `<th>${column}</th>`;
+                            });
+                            tableHtml += '</tr></thead>';
+                            
+                            // Table body
+                            tableHtml += '<tbody>';
+                            response.data.forEach(row => {
+                                tableHtml += '<tr class="fade-in">';
+                                Object.values(row).forEach(cell => {
+                                    tableHtml += `<td>${cell}</td>`;
+                                });
+                                tableHtml += '</tr>';
+                            });
+                            tableHtml += '</tbody>';
+                            tableHtml += '</table>';
+                            tableHtml += '</div>';
+                            
+                            // Add pagination controls if pagination data is available
+                            if (response.pagination) {
+                                const { current_page, total_pages, total_records } = response.pagination;
+                                
+                                if (total_pages > 1) {
+                                    tableHtml += `
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <div class="text-muted">
+                                                Showing page ${current_page} of ${total_pages} (${total_records} total records)
+                                            </div>
+                                            <nav aria-label="Report pagination">
+                                                <ul class="pagination">
+                                                    <li class="page-item ${current_page === 1 ? 'disabled' : ''}">
+                                                        <a class="page-link" href="#" data-page="${current_page - 1}" ${current_page === 1 ? 'tabindex="-1" aria-disabled="true"' : ''}>
+                                                            <i class="fas fa-chevron-left"></i> Previous
+                                                        </a>
+                                                    </li>
+                                    `;
+                                    
+                                    // Show page numbers (up to 5 pages)
+                                    const startPage = Math.max(1, current_page - 2);
+                                    const endPage = Math.min(total_pages, startPage + 4);
+                                    
+                                    for (let i = startPage; i <= endPage; i++) {
+                                        tableHtml += `
+                                            <li class="page-item ${i === current_page ? 'active' : ''}">
+                                                <a class="page-link" href="#" data-page="${i}">${i}</a>
+                                            </li>
+                                        `;
+                                    }
+                                    
+                                    tableHtml += `
+                                                    <li class="page-item ${current_page === total_pages ? 'disabled' : ''}">
+                                                        <a class="page-link" href="#" data-page="${current_page + 1}" ${current_page === total_pages ? 'tabindex="-1" aria-disabled="true"' : ''}>
+                                                            Next <i class="fas fa-chevron-right"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                    `;
+                                }
+                            }
+                            
+                            // Add report summary
+                            tableHtml += `
+                                <div class="mt-4 p-3 bg-light rounded-3 fade-in">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-3">
+                                                    <i class="fas fa-file-alt fa-2x text-primary"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Report Type</h6>
+                                                    <p class="mb-0 text-muted">${response.report_type}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-3">
+                                                    <i class="fas fa-calendar fa-2x text-success"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Date Range</h6>
+                                                    <p class="mb-0 text-muted">${response.date_range}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-3">
+                                                    <i class="fas fa-table fa-2x text-info"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">Total Records</h6>
+                                                    <p class="mb-0 text-muted">${response.pagination ? response.pagination.total_records : response.data.length}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            // Display table
+                            $('#reportPreview').html(tableHtml);
+                            
+                            // Add animation to table rows
+                            $('#previewTable tbody tr').each(function(index) {
+                                $(this).css('animation-delay', (index * 0.05) + 's');
+                            });
+                            
+                            // Add event listeners for pagination
+                            $('.pagination .page-link').on('click', function(e) {
+                                e.preventDefault();
+                                if (!$(this).parent().hasClass('disabled')) {
+                                    const page = $(this).data('page');
+                                    loadReportPreview(page);
+                                }
+                            });
+                        } else {
+                            // Show error message
+                            $('#reportPreview').html(`
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-exclamation-circle me-2"></i>
+                                    ${response.message}
+                                </div>
+                            `);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // Show error message
+                        $('#reportPreview').html(`
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                An error occurred while generating the preview. Please try again.
+                            </div>
+                        `);
+                        console.error(error);
+                    }
+                });
+            }
+            
+            // Preview report
+            $('#previewButton').on('click', function(e) {
+                e.preventDefault();
+                loadReportPreview(1); // Load first page
+            });
+            
+            // Print preview
+            $('#printPreview').on('click', function(e) {
+                e.preventDefault();
+                window.print();
+            });
+            
+            // Refresh preview
+            $('#refreshPreview').on('click', function(e) {
+                e.preventDefault();
+                $('#previewButton').click();
+            });
+            
+            // Form validation
+            $('#reportForm').on('submit', function(e) {
+                const dateRangeType = $('#dateRangeType').val();
+                
+                if (dateRangeType === 'custom') {
+                    const startDate = $('#startDate').val();
+                    const endDate = $('#endDate').val();
+                    
+                    if (!startDate || !endDate) {
+                        e.preventDefault();
+                        alert('Please select both start and end dates.');
+                        return false;
+                    }
+                } else if (dateRangeType === 'month') {
+                    const startMonth = $('#startMonth').val();
+                    const endMonth = $('#endMonth').val();
+                    
+                    if (!startMonth || !endMonth) {
+                        e.preventDefault();
+                        alert('Please select both start and end months.');
+                        return false;
+                    }
+                }
+                
+                return true;
+            });
+            
+            // Add tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+</body>
+</html>

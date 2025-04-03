@@ -1,0 +1,248 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Website Title -->
+    <title>TBSC Tracker</title>
+    
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500,700&display=swap&subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600&display=swap&subset=latin-ext" rel="stylesheet">
+    <link href="{% static 'css1/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css1/fontawesome-all.css' %}" rel="stylesheet">
+    <link href="{% static 'css1/swiper.css' %}" rel="stylesheet">
+	<link href="{% static 'css1/magnific-popup.css' %}" rel="stylesheet">
+	<link href="{% static 'css1/styles.css' %}" rel="stylesheet">
+	
+	<!-- Favicon  -->
+    <link rel="icon" href="{% static 'images/logo1.png' %}">
+    <style>
+        .rounded-logo {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+        }
+        /* Custom styles for the main content */
+        .main {
+            background-color: rgb(3, 19, 54);
+            min-height: 77vh;
+            padding-top: 8rem;
+        }
+        .hero {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 80%;
+            padding: 2rem;
+        }
+        .description {
+            padding: 20px;
+            margin-left: 10px;
+            width: 50%;
+        }
+        .head1 {
+            font-size: 80px;
+            width: max-content;
+            color: white;
+            margin-bottom: 10px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .head2 {
+            color: rgb(208, 217, 224);
+            font-size: 20px;
+            text-align: justify;
+            font-family: 'Open Sans', sans-serif;
+        }
+        .image {
+            width: 500px;
+            height: auto;
+            animation: moveUpDown 2.5s infinite alternate;
+        }
+        @keyframes moveUpDown {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-40px); }
+        }
+    </style>
+</head>
+<body data-spy="scroll" data-target=".fixed-top">
+    
+    <!-- Preloader -->
+	<div class="spinner-wrapper">
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </div>
+    <!-- end of preloader -->
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark navbar-custom fixed-top">
+        <!-- Image Logo -->
+        <a class="navbar-brand logo-image" href="{% url 'welcome' %}">
+            <img src="{% static 'images/airplane.gif' %}" alt="TBSC Logo" class="rounded-logo">
+        </a>
+        
+        <!-- Mobile Menu Toggle Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-awesome fas fa-bars"></span>
+            <span class="navbar-toggler-awesome fas fa-times"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="{% url 'welcome' %}">HOME</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="{% url 'report_user' %}">REPORT CASE</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="{% url 'missing' %}">ALL MISSING CASES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="{% url 'viewcase' %}">MY CASE</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="{% url 'logout' %}">LOGOUT</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- end of navbar -->
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="hero">
+            <div class="description">
+                <h1 class="head1">TBSC Tracker</h1>
+                <p class="head2">TBSC Tracker, powered by AI and ML, is a dedicated initiative committed to
+                    finding and reuniting missing individuals with their families across India. We leverage
+                    cutting-edge technology and compassionate teamwork to ensure that no one is left behind.</p>
+            </div>
+            <img class="image" src="{% static 'images/hero-img.png'%}" alt="Missing Person Tracker">
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>TBSC Tracker</h4>
+                    <p>
+                        42 MG Road<br>
+                        Trivandrum, Kerala, 695001<br>
+                        India<br><br>
+                        Phone: +91 99895 54885<br>
+                        Email: contact@tbsctracker.com
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h4>Important Links</h4>
+                    <ul class="list-unstyled">
+                        <li>
+                            <i class="fas fa-check"></i>
+                            Our business partners <a href="#your-link">startupguide.com</a>
+                        </li>
+                        <li>
+                            <i class="fas fa-check"></i>
+                            Read our <a href="#">Terms & Conditions</a>, <a href="#">Privacy Policy</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h4>Social Media</h4>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+    .footer {
+        background-color: #1d3b53;
+        color: #fff;
+        padding: 50px 0 20px 0;
+    }
+    .footer h4 {
+        color: #fff;
+        margin-bottom: 25px;
+    }
+    .footer p, .footer a {
+        color: #fff;
+        text-decoration: none;
+    }
+    .footer a:hover {
+        color: #14bf98;
+    }
+    .footer li {
+        margin-bottom: 15px;
+    }
+    .footer .fas.fa-check {
+        color: #14bf98;
+        margin-right: 10px;
+        font-size: 0.8em;
+    }
+    .social-icons {
+        display: flex;
+        gap: 15px;
+    }
+    .social-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+        transition: all 0.3s ease;
+    }
+    .social-icon:hover {
+        background: #14bf98;
+        transform: translateY(-3px);
+    }
+    .social-icon i {
+        font-size: 1.2em;
+    }
+    .copyright {
+        background-color: #1d3b53;
+        color: #fff;
+        text-align: center;
+        padding: 25px 0;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    </style>
+
+    <!-- Copyright -->
+    <div class="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    Copyright &copy; 2025 TBSC Tracker - All rights reserved
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'js1/jquery.min.js' %}"></script>
+    <script src="{% static 'js1/popper.min.js' %}"></script>
+    <script src="{% static 'js1/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js1/jquery.easing.min.js' %}"></script>
+    <script src="{% static 'js1/swiper.min.js' %}"></script>
+    <script src="{% static 'js1/jquery.magnific-popup.js' %}"></script>
+    <script src="{% static 'js1/morphext.min.js' %}"></script>
+    <script src="{% static 'js1/validator.min.js' %}"></script>
+    <script src="{% static 'js1/scripts.js' %}"></script>
+</body>
+</html>

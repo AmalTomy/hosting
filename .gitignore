@@ -1,0 +1,81 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Django
+*.log
+db.sqlite3
+media/
+
+# Virtual Environment
+venv/
+env/
+.env
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ML related files - Weather Classification
+weather_classification_model.keras
+weather_classification_model.h5
+train_weather_model.py
+weather_dataset/
+training_history.png
+
+# ML related files - Face Detection
+face_recognition_models/
+face_encodings/
+known_faces/
+*.dat
+dlib_face_recognition_resnet_model_v1.dat
+shape_predictor_68_face_landmarks.dat
+shape_predictor_5_face_landmarks.dat
+mmod_human_face_detector.dat
+evaluate_face_recognition.py
+generate_ml_graphs.py
+/home/face_utils.py
+
+# Generated ML graphs and visualizations
+docs/face_recognition_flowchart.png
+docs/face_recognition_flowchart.svg
+ml_graphs/
+performance_metrics/
+
+# Temporary files that might contain ML data
+temp_faces/
+temp_weather/
+*.npy
+*.npz
+*.pkl
+
+# Large datasets
+datasets/
+training_data/
+validation_data/
+test_data/
+
+# Jupyter notebooks (often used for ML experimentation)
+*.ipynb
+.ipynb_checkpoints/
+
+# TensorFlow and Keras related files
+*.keras
+*.h5
+*.pb
+*.tflite
+saved_model/
+checkpoint
+model_checkpoints/
+
+# System files
+.DS_Store
+Thumbs.db

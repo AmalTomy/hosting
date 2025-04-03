@@ -1,0 +1,527 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Report Case - TBSC Tracker</title>
+    
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500,700&display=swap&subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600&display=swap&subset=latin-ext" rel="stylesheet">
+    <link href="{% static 'css1/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css1/fontawesome-all.css' %}" rel="stylesheet">
+    <link href="{% static 'css1/styles.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    
+    <style>
+        /* Custom styles */
+        .header {
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('{% static "images/header-background.jpg" %}') center center no-repeat;
+            background-size: cover;
+            padding: 8rem 0 4rem 0;
+            text-align: center;
+            color: #fff;
+        }
+        .header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .header p {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .form-container {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            padding: 3rem;
+            margin: -4rem auto 4rem;
+            position: relative;
+            max-width: 1000px;
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-control {
+            border: 2px solid #e1e1e1;
+            padding: 0.8rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+            color: #333;
+            background-color: #fff;
+        }
+        .form-control:focus {
+            border-color: #14bf98;
+            box-shadow: none;
+        }
+        /* Specific styles for select dropdown */
+        select.form-control {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+            padding-right: 2.5rem;
+            cursor: pointer;
+        }
+        select.form-control option {
+            color: #333;
+            background-color: #fff;
+            padding: 0.5rem;
+        }
+        select.form-control::-ms-expand {
+            display: none;
+        }
+        .btn-submit {
+            background: #14bf98;
+            color: #fff;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            border: none;
+            transition: all 0.3s;
+        }
+        .btn-submit:hover {
+            background: #13aa88;
+            transform: translateY(-2px);
+        }
+        .image-preview {
+            border: 2px dashed #e1e1e1;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .small-footer {
+            background: #1d3b53;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .small-footer a {
+            color: #14bf98;
+            text-decoration: none;
+        }
+        .small-footer a:hover {
+            text-decoration: underline;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #fff;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            margin: 10% auto;
+            text-align: center;
+            animation: modalSlide 0.3s ease-out;
+        }
+        @keyframes modalSlide {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-md navbar-dark navbar-custom fixed-top">
+        <a class="navbar-brand logo-image" href="{% url 'welcome' %}">
+            <img src="{% static 'images/airplane.gif' %}" alt="TBSC Logo" class="rounded-logo">
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault">
+            <span class="navbar-toggler-awesome fas fa-bars"></span>
+            <span class="navbar-toggler-awesome fas fa-times"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="{% url 'welcome' %}">HOME</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-scroll active" href="{% url 'report_user' %}">REPORT CASE</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="{% url 'missing' %}">ALL MISSING CASES</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="{% url 'viewcase' %}">MY CASE</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="{% url 'logout' %}">LOGOUT</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>Report Missing Case</h1>
+            <p>Help us find your loved ones by providing accurate information</p>
+        </div>
+    </header>
+
+    <!-- Form Section -->
+    <div class="container">
+        <div class="form-container">
+            <form action="/reportuser/" method="POST" enctype="multipart/form-data" id="reportForm">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" class="form-control" id="firstName" name="first_name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" name="last_name" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="dateOfBirth">Date of Birth</label>
+                            <input type="date" class="form-control" id="dateOfBirth" name="dob" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        {% if error %}
+                        <p style="color: rgb(2, 2, 33); font-weight: 300;">{{ error }}</p>
+                        {% endif %}
+                        <span id="aadharError" style="color:rgb(1, 1, 24);"></span>
+                        <div class="form-group">
+                            <label for="aadharNumber">Aadhar Number</label>
+                            <input type="text" class="form-control" id="aadharNumber" name="aadhar_number" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="missingDate">Missing Date</label>
+                            <input type="date" class="form-control" id="missingDate" name="missing_date" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <div class="gender-options">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gender" id="male" value="male" required>
+                                    <label class="form-check-label" for="male">Male</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+                                    <label class="form-check-label" for="female">Female</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gender" id="other" value="other">
+                                    <label class="form-check-label" for="other">Other</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="location">Nearby Police Station</label>
+                            <select name="location" id="location" class="form-control" required>
+                                <option value="">--Please choose an option--</option>
+                                {% for station in police_stations %}
+                                <option value="{{ station }}">{{ station }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Photo of Missing Person</label>
+                    <div class="image-preview">
+                        <input type="file" class="form-control-file" id="image" name="image" accept="image/*" required>
+                        <div id="imagePreview"></div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-submit">Submit Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Small Footer -->
+    <div class="small-footer">
+        <div class="container">
+            <p> 2025 TBSC Tracker. All rights reserved. <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="responseModal" class="modal">
+        <div class="modal-content">
+            <div id="modalIcon"></div>
+            <div id="modalMessage" class="modal-message"></div>
+            <button onclick="closeModal()" class="btn btn-submit mt-3">Close</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'js1/jquery.min.js' %}"></script>
+    <script src="{% static 'js1/popper.min.js' %}"></script>
+    <script src="{% static 'js1/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js1/jquery.easing.min.js' %}"></script>
+    <script src="{% static 'js1/scripts.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+    <script>
+        // Function to validate the form before submission
+        function validateForm() {
+            // Get all input fields
+            var firstName = document.getElementById('firstName').value;
+            var lastName = document.getElementById('lastName').value;
+            var address = document.getElementById('address').value;
+            var dateOfBirth = document.getElementById('dateOfBirth').value;
+            var aadharNumber = document.getElementById('aadharNumber').value;
+            var missingDate = document.getElementById('missingDate').value;
+            var location = document.getElementById('location').value;
+            var image = document.getElementById('image').value;
+            var gender = document.querySelector('input[name="gender"]:checked');
+
+            // Check if any field is empty
+            if (!firstName || !lastName || !address || !dateOfBirth || !aadharNumber || !missingDate || !location || !image || !gender) {
+                alert('Please fill out all fields.');
+                return false;
+            }
+
+            // Check Aadhar number length
+            if (aadharNumber.length !== 12) {
+                alert('Aadhar number must be 12 characters long.');
+                return false;
+            }
+
+            // Check missing date validation
+            if (!validateMissingDate()) {
+                return false;
+            }
+
+            // Show success message if all validations pass
+            alert('Registered Successfully');
+            return true; // Allow form submission
+        }
+
+        function validateMissingDate() {
+            var dob = new Date(document.getElementById('dateOfBirth').value);
+            var missingDate = new Date(document.getElementById('missingDate').value);
+
+            // Check if the missing date is after the date of birth
+            if (missingDate <= dob) {
+                alert("Missing date should be after the date of birth.");
+                return false; // Prevent form submission
+            }
+            return true; // Allow form submission
+        }
+
+        function validateImage() {
+            const fileInput = document.getElementById('image');
+            const file = fileInput.files[0];
+            const errorElement = document.getElementById('imageError');
+            
+            // Clear previous error
+            errorElement.textContent = '';
+            
+            if (!file) {
+                errorElement.textContent = 'Please select an image file';
+                return false;
+            }
+            
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                errorElement.textContent = 'Please select a valid image file (JPG, PNG, etc.)';
+                return false;
+            }
+            
+            // Updated file size check to 10MB
+            const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+            if (file.size > maxSize) {
+                errorElement.textContent = 'Image size should be less than 10MB';
+                return false;
+            }
+            
+            return true;
+        }
+
+        function previewImage() {
+            const input = document.getElementById('image');
+            const preview = document.getElementById('imagePreview');
+            const cropBtn = document.getElementById('cropBtn');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    cropBtn.style.display = 'block';
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Add these new functions for modal handling
+        function showModal(success, message) {
+            const modal = document.getElementById('responseModal');
+            const modalIcon = document.getElementById('modalIcon');
+            const modalMessage = document.getElementById('modalMessage');
+
+            // Set icon and message
+            if (success) {
+                modalIcon.innerHTML = `
+                    <div class="success-checkmark">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                    </div>`;
+                modalMessage.textContent = message || 'Case Reported Successfully!';
+            } else {
+                modalIcon.innerHTML = `
+                    <div class="failure-cross">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                    </div>`;
+                modalMessage.textContent = message || 'Case Report Failed!';
+            }
+
+            modal.style.display = 'flex';
+
+            // Redirect after delay
+            setTimeout(() => {
+                modal.style.display = 'none';
+                if (success) {
+                    window.location.href = '/viewcase';
+                } else {
+                    window.location.href = '/userhome';
+                }
+            }, 2000);
+        }
+
+        // Update form submission handling
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateForm()) {
+                // Submit the form data using fetch
+                fetch(this.action, {
+                    method: 'POST',
+                    body: new FormData(this)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showModal(true);
+                    } else {
+                        showModal(false, data.error);
+                    }
+                })
+                .catch(error => {
+                    showModal(false, 'An error occurred while submitting the form.');
+                });
+            }
+        });
+
+        let cropper = null;
+
+        function openCropModal() {
+            const modal = document.getElementById('cropModal');
+            const cropImage = document.getElementById('cropImage');
+            cropImage.src = document.getElementById('imagePreview').src;
+            modal.style.display = 'block';
+            
+            cropper = new Cropper(cropImage, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 0.8
+            });
+        }
+
+        function saveCrop() {
+            const canvas = cropper.getCroppedCanvas();
+            const preview = document.getElementById('imagePreview');
+            preview.src = canvas.toDataURL();
+            
+            // Convert cropped image to file for upload
+            canvas.toBlob(function(blob) {
+                const file = new File([blob], 'cropped.jpg', { type: 'image/jpeg' });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                document.getElementById('image').files = dataTransfer.files;
+            }, 'image/jpeg');
+            
+            closeCropModal();
+        }
+
+        function cancelCrop() {
+            closeCropModal();
+        }
+
+        function closeCropModal() {
+            const modal = document.getElementById('cropModal');
+            modal.style.display = 'none';
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+        }
+    </script>
+</body>
+</html>

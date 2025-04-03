@@ -1,0 +1,199 @@
+{
+  "id": "4a8596b6-5b90-4b2c-ae51-3452fad92fb9",
+  "version": "2.0",
+  "name": "bookigcancellation",
+  "url": "http://127.0.0.1:8000/",
+  "tests": [{
+    "id": "4a6c707c-47bd-4a9e-b186-b0879f808ddf",
+    "name": "bookingcancel",
+    "commands": [{
+      "id": "6ccabaa7-afed-45e2-9bf6-5af632ba658e",
+      "comment": "",
+      "command": "open",
+      "target": "http://127.0.0.1:8000/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9553c1e4-011d-497b-a006-0a1b707e9615",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1552x880",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7a2da35d-8896-4243-a520-34c9accff2c4",
+      "comment": "",
+      "command": "click",
+      "target": "id=navbarDropdown",
+      "targets": [
+        ["id=navbarDropdown", "id"],
+        ["linkText=ACCOUNT", "linkText"],
+        ["css=#navbarDropdown", "css:finder"],
+        ["xpath=//a[contains(text(),'ACCOUNT')]", "xpath:link"],
+        ["xpath=//a[@id='navbarDropdown']", "xpath:attributes"],
+        ["xpath=//div[@id='navbarsExampleDefault']/ul/li[3]/a", "xpath:idRelative"],
+        ["xpath=(//a[contains(@href, '#')])[3]", "xpath:href"],
+        ["xpath=//li[3]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'ACCOUNT')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "e2c48974-152e-421f-af46-46428297c167",
+      "comment": "",
+      "command": "click",
+      "target": "css=.dropdown-item:nth-child(1) > .item-text",
+      "targets": [
+        ["css=.dropdown-item:nth-child(1) > .item-text", "css:finder"],
+        ["xpath=//div[@id='navbarsExampleDefault']/ul/li[3]/div/a/span", "xpath:idRelative"],
+        ["xpath=//div/a/span", "xpath:position"],
+        ["xpath=//span[contains(.,'SIGN IN')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "5ed15e5c-b173-4bc7-b7cc-e8eafc24328c",
+      "comment": "",
+      "command": "click",
+      "target": "id=email",
+      "targets": [
+        ["id=email", "id"],
+        ["name=email", "name"],
+        ["css=#email", "css:finder"],
+        ["xpath=//input[@id='email']", "xpath:attributes"],
+        ["xpath=//form[@id='login-form']/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "263d66ae-6ad5-4185-8b0d-f5011bd2f445",
+      "comment": "",
+      "command": "type",
+      "target": "id=email",
+      "targets": [
+        ["id=email", "id"],
+        ["name=email", "name"],
+        ["css=#email", "css:finder"],
+        ["xpath=//input[@id='email']", "xpath:attributes"],
+        ["xpath=//form[@id='login-form']/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "amaltomy2025@mca.ajce.in"
+    }, {
+      "id": "627dedef-9c16-491e-a042-f11a6313fbf0",
+      "comment": "",
+      "command": "type",
+      "target": "id=password",
+      "targets": [
+        ["id=password", "id"],
+        ["name=password", "name"],
+        ["css=#password", "css:finder"],
+        ["xpath=//input[@id='password']", "xpath:attributes"],
+        ["xpath=//form[@id='login-form']/div[2]/input", "xpath:idRelative"],
+        ["xpath=//div[2]/input", "xpath:position"]
+      ],
+      "value": "Amal@123"
+    }, {
+      "id": "a5b52e22-c55b-4c9a-8534-5eb1f1254226",
+      "comment": "",
+      "command": "click",
+      "target": "css=.login-btn",
+      "targets": [
+        ["css=.login-btn", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//form[@id='login-form']/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"],
+        ["xpath=//button[contains(.,'Login')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "d09132dc-e4f0-44ea-9886-f304c82527ce",
+      "comment": "",
+      "command": "click",
+      "target": "id=userDropdown",
+      "targets": [
+        ["id=userDropdown", "id"],
+        ["linkText=Welcome, Amal", "linkText"],
+        ["css=#userDropdown", "css:finder"],
+        ["xpath=//a[contains(text(),'Welcome, Amal')]", "xpath:link"],
+        ["xpath=//a[@id='userDropdown']", "xpath:attributes"],
+        ["xpath=//div[@id='navbarsExampleDefault']/ul/li[4]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '#')]", "xpath:href"],
+        ["xpath=//li[4]/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "6d1bfb27-233a-484e-8f14-cdb294499667",
+      "comment": "",
+      "command": "click",
+      "target": "css=.dropdown-item:nth-child(5) > .item-text",
+      "targets": [
+        ["css=.dropdown-item:nth-child(5) > .item-text", "css:finder"],
+        ["xpath=//div[@id='navbarsExampleDefault']/ul/li[4]/div/a[3]/span", "xpath:idRelative"],
+        ["xpath=//a[3]/span", "xpath:position"],
+        ["xpath=//span[contains(.,'Cancel Booking')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "5c821b17-8bf3-4b7c-91dc-dae9eeb056ba",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn-secondary",
+      "targets": [
+        ["css=.btn-secondary", "css:finder"],
+        ["xpath=(//button[@type='button'])[6]", "xpath:attributes"],
+        ["xpath=//div[@id='cancellationPolicyModal']/div/div/div[3]/button", "xpath:idRelative"],
+        ["xpath=//div[3]/button", "xpath:position"],
+        ["xpath=//button[contains(.,'I Understand')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "065b505b-dac7-4022-b901-55bed1c316e6",
+      "comment": "",
+      "command": "click",
+      "target": "css=#cancelForm225 > .btn",
+      "targets": [
+        ["css=#cancelForm225 > .btn", "css:finder"],
+        ["xpath=(//button[@type='button'])[2]", "xpath:attributes"],
+        ["xpath=//form[@id='cancelForm225']/button", "xpath:idRelative"],
+        ["xpath=//form/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Cancel Booking')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "8539f8af-f46f-464e-9937-46fa50357a1b",
+      "comment": "",
+      "command": "click",
+      "target": "id=confirmCancellationBtn",
+      "targets": [
+        ["id=confirmCancellationBtn", "id"],
+        ["css=#confirmCancellationBtn", "css:finder"],
+        ["xpath=//button[@id='confirmCancellationBtn']", "xpath:attributes"],
+        ["xpath=//div[@id='cancellationConfirmModal']/div/div/div[3]/button[2]", "xpath:idRelative"],
+        ["xpath=//button[2]", "xpath:position"],
+        ["xpath=//button[contains(.,'Yes, Cancel Booking')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "00c84baf-83bc-4143-8130-875319b9dff4",
+      "comment": "",
+      "command": "click",
+      "target": "css=.swal2-confirm",
+      "targets": [
+        ["css=.swal2-confirm", "css:finder"],
+        ["xpath=(//button[@type='button'])[11]", "xpath:attributes"],
+        ["xpath=//div[6]/button", "xpath:position"],
+        ["xpath=//button[contains(.,'OK')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "69a8f1c9-f617-4216-99f5-d84c06059f2e",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["4a6c707c-47bd-4a9e-b186-b0879f808ddf"]
+  }],
+  "urls": [],
+  "plugins": []
+}

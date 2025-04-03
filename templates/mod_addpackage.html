@@ -1,0 +1,952 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Travel Package - Moderator Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #008cff;
+            --text-gray: #4a4a4a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            min-height: 100vh;
+        }
+
+        .destination-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 1000;
+            transition: all 0.5s ease-in-out;
+        }
+
+        .destination-section.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .destination-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            transform: translateY(0);
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .destination-section.hidden .destination-container {
+            transform: translateY(-50px);
+        }
+
+        .destination-container h2 {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .destination-container select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .destination-container select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .destination-container button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .destination-container button:hover {
+            background-color: #0070cc;
+        }
+
+        .destination-container button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        :root {
+            --primary-color: #008cff;
+            --text-gray: #4a4a4a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-nav .nav-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            margin-right: 1px;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .header-nav .nav-link.active {
+            background-color: rgba(0, 123, 255, 0.1);
+            color: #007bff;
+        }
+
+        .header-nav .nav-link i {
+            margin-right: 0.5rem;
+        }
+
+        .alert {
+            display: flex;
+            align-items: center;
+            padding-right: 177px;
+        }
+
+        /* Form and Content Styles */
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-section h4 {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+            font-weight: 600;
+        }
+
+        .form-floating {
+            margin-bottom: 1rem;
+        }
+
+        .form-floating > .form-control,
+        .form-floating > .form-select {
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .form-floating > .form-control:focus,
+        .form-floating > .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(0, 140, 255, 0.25);
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .feature-item i {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .preview-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            margin-top: 1rem;
+        }
+
+        .preview-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .preview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-content {
+            padding: 1.5rem;
+        }
+
+        .preview-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255,255,255,0.9);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0070cc;
+            border-color: #0070cc;
+        }
+
+        .price-section {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .preview-card {
+                margin-bottom: 2rem;
+            }
+        }
+
+        /* Modal Styles */
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1100;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+        }
+
+        .circle-animation {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #ddd;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+
+        /* Success Animation */
+        .success .circle-animation {
+            border-color: #28a745;
+            animation: circle-fill 0.5s ease-in-out forwards;
+        }
+
+        .success .checkmark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: white;
+            opacity: 0;
+            animation: fade-in 0.5s ease-in-out 0.5s forwards;
+        }
+
+        /* Error Animation */
+        .error .circle-animation {
+            border-color: #dc3545;
+            animation: circle-fill-error 0.5s ease-in-out forwards;
+        }
+
+        .error .cross {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: white;
+            opacity: 0;
+            animation: fade-in 0.5s ease-in-out 0.5s forwards;
+        }
+
+        @keyframes circle-fill {
+            to {
+                background: #28a745;
+            }
+        }
+
+        @keyframes circle-fill-error {
+            to {
+                background: #dc3545;
+            }
+        }
+
+        @keyframes fade-in {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Destination Selection Section -->
+    <div class="destination-section" id="destinationSection">
+        <div class="destination-container">
+            <h2>Select Destination</h2>
+            <select id="destinationSelect" class="form-select">
+                <option value="">Choose a destination...</option>
+            </select>
+            <button id="continueBtn" disabled>Continue</button>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Main content -->
+            <main class="col-md-12 px-md-4 main-content">
+                <!-- Header -->
+                <header class="d-flex justify-content-end align-items-center py-3 mb-4 border-bottom">
+                    <div class="d-flex align-items-center dropdown">
+                        <img src="{% static 'images/spy.gif' %}" alt="User" class="rounded-circle" style="width: 40px; height: 40px; border: 2px solid #007bff;">
+                        <span class="me-3 dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if request.user.first_name and request.user.last_name %}
+                                {{ request.user.first_name }} {{ request.user.last_name }}
+                            {% else %}
+                                {{ request.user.email }}
+                            {% endif %}
+                        </span>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="{% url 'mod_profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'signout' %}">Logout</a></li>
+                        </ul>
+                    </div>
+                </header>
+
+                {% if messages %}
+                <div class="container mt-3">
+                    {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="alert alert-light d-flex justify-content-end align-items-center" role="alert">
+                    <nav class="header-nav">
+                        <a class="nav-link" href="{% url 'mod_home' %}">
+                            <i class="fas fa-home me-2"></i> Home
+                        </a>
+                        <a class="nav-link" href="{% url 'mod_sch' %}">
+                            <i class="fas fa-bus me-2"></i> Schedule Buses
+                        </a>
+                        <a class="nav-link" href="{% url 'notifications_report' %}">
+                            <i class="fas fa-list-alt me-2"></i> Report List
+                        </a>
+                        <a class="nav-link" href="{% url 'mod_agentlist' %}">
+                            <i class="fas fa-users me-2"></i> Agents
+                        </a>
+                        <a class="nav-link" href="{% url 'moderator_job_requests' %}">
+                            <i class="fas fa-briefcase me-2"></i> Agent Job Requests
+                        </a>
+                        <a class="nav-link" href="{% url 'buses_added_by_moderator' %}">
+                            <i class="fas fa-plus-circle me-2"></i> Bus Added
+                        </a>
+                        <a class="nav-link" href="{% url 'view_bus_bookings' %}">
+                            <i class="fas fa-book me-2"></i> Bus Bookings
+                        </a>
+                        <a class="nav-link active" href="{% url 'mod_addpackage' %}">
+                            <i class="fas fa-box me-2"></i> Add Package
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <form method="POST" enctype="multipart/form-data" id="packageForm" style="display: none;">
+                            {% csrf_token %}
+                            
+                            <!-- Basic Information -->
+                            <div class="form-section">
+                                <h4>Basic Information</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="packageTitle" name="title" required>
+                                            <label for="packageTitle">Package Title</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="destinationDisplay" readonly>
+                                            <input type="hidden" class="form-control" id="destination" name="destination" required>
+                                            <label for="destinationDisplay">Destination</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="number" class="form-control" id="duration_nights" name="duration_nights" min="1" required>
+                                            <label for="duration_nights">Duration (Nights)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="number" class="form-control" id="duration_days" name="duration_days" min="1" required>
+                                            <label for="duration_days">Duration (Days)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-floating mb-3">
+                                            <textarea class="form-control" id="overview" name="overview" style="height: 100px" required></textarea>
+                                            <label for="overview">Package Overview</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pricing and Category -->
+                            <div class="form-section">
+                                <h4>Pricing & Category</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="number" class="form-control" id="price" name="price" min="0" step="0.01" required>
+                                            <label for="price">Price per Person (₹)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <select class="form-select" id="category" name="category" required>
+                                                <option value="">Select Category</option>
+                                                <option value="solo">Solo</option>
+                                                <option value="group">Group</option>
+                                                <option value="family">Family</option>
+                                            </select>
+                                            <label for="category">Package Category</label>
+                                        </div>  
+                                    </div>
+                                </div>
+                                <!-- <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="number" class="form-control" id="discount" name="discount" min="0" max="100" step="1">
+                                            <label for="discount">Discount Percentage (%)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="coupon_code" name="coupon_code">
+                                            <label for="coupon_code">Coupon Code (Optional)</label>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
+
+                            <!-- Features -->
+                            <div class="form-section">
+                                <h4>Package Features</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="feature-item">
+                                            <input type="checkbox" class="form-check-input" id="feature_flights" name="features[]" value="flights">
+                                            <label for="feature_flights">
+                                                <i class="fas fa-bus"></i> Return Bus Tickets
+                                            </label>
+                                        </div>
+                                        <div class="feature-item">
+                                            <input type="checkbox" class="form-check-input" id="feature_hotel" name="features[]" value="hotel">
+                                            <label for="feature_hotel">
+                                                <i class="fas fa-hotel"></i> Hotel Stay
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- <div class="feature-item">
+                                            <input type="checkbox" class="form-check-input" id="feature_transfers" name="features[]" value="transfers">
+                                            <label for="feature_transfers">
+                                                <i class="fas fa-car"></i> Airport Transfers
+                                            </label>
+                                        </div> -->
+                                        <div class="feature-item">
+                                            <input type="checkbox" class="form-check-input" id="feature_meals" name="features[]" value="meals">
+                                            <label for="feature_meals">
+                                                <i class="fas fa-utensils"></i> Selected Meals
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="form-floating">
+                                        <select class="form-select" id="hotelCategory" name="hotel_category" required>
+                                            <option value="">Select Hotel Category</option>
+                                            <option value="3">3 Star</option>
+                                            <option value="4">4 Star</option>
+                                            <option value="5">5 Star</option>
+                                        </select>
+                                        <label for="hotelCategory">Hotel Category</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Itinerary -->
+                            <div class="form-section">
+                                <h4>Day-wise Itinerary</h4>
+                                <div id="itineraryContainer">
+                                    <!-- Day 1 -->
+                                    <div class="day-itinerary mb-4">
+                                        <h5 class="mb-3">Day 1</h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="day1_title" name="day1_title" required>
+                                                    <label for="day1_title">Day Title</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <select class="form-select" id="day1_meals" name="day1_meals">
+                                                        <option value="">Select Meals</option>
+                                                        <option value="breakfast">Breakfast</option>
+                                                        <option value="breakfast_lunch">Breakfast & Lunch</option>
+                                                        <option value="all_meals">All Meals</option>
+                                                    </select>
+                                                    <label for="day1_meals">Included Meals</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="activities-container" data-day="1">
+                                            <div class="activity-row mb-3">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-floating">
+                                                            <input type="time" class="form-control" name="day1_activity1_time">
+                                                            <label>Time</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="form-floating">
+                                                            <input type="text" class="form-control" name="day1_activity1_title" placeholder="Activity Title">
+                                                            <label>Activity Title</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-floating mt-2">
+                                                    <textarea class="form-control" name="day1_activity1_description" style="height: 80px" placeholder="Activity Description"></textarea>
+                                                    <label>Activity Description</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addActivity(1)">
+                                            <i class="fas fa-plus"></i> Add Activity
+                                        </button>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary" onclick="addDay()">
+                                    <i class="fas fa-plus"></i> Add Another Day
+                                </button>
+                            </div>
+
+                            <!-- Images and Gallery -->
+                            <div class="form-section">
+                                <h4>Images & Gallery</h4>
+                                <div class="mb-3">
+                                    <label class="form-label">Main Package Image</label>
+                                    <input type="file" class="form-control" id="mainImage" name="main_image" accept="image/*" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Gallery Images (Select Multiple)</label>
+                                    <input type="file" class="form-control" id="galleryImages" name="gallery_images[]" accept="image/*" multiple>
+                                </div>
+                            </div>
+
+                            <!-- Policies -->
+                            <div class="form-section">
+                                <h4>Policies</h4>
+                                <div class="form-floating mb-3">
+                                    <textarea class="form-control" id="cancellationPolicy" name="cancellation_policy" style="height: 100px" required></textarea>
+                                    <label for="cancellationPolicy">Cancellation Policy</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <textarea class="form-control" id="termsConditions" name="terms_conditions" style="height: 100px" required></textarea>
+                                    <label for="termsConditions">Terms & Conditions</label>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 mb-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Create Package</button>
+                            </div>
+                        </form>
+
+                        <script>
+                            let dayCount = 1;
+
+                            function addDay() {
+                                dayCount++;
+                                const dayHtml = `
+                                    <div class="day-itinerary mb-4">
+                                        <h5 class="mb-3">Day ${dayCount}</h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="day${dayCount}_title" name="day${dayCount}_title" required>
+                                                    <label for="day${dayCount}_title">Day Title</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <select class="form-select" id="day${dayCount}_meals" name="day${dayCount}_meals">
+                                                        <option value="">Select Meals</option>
+                                                        <option value="breakfast">Breakfast</option>
+                                                        <option value="breakfast_lunch">Breakfast & Lunch</option>
+                                                        <option value="all_meals">All Meals</option>
+                                                    </select>
+                                                    <label for="day${dayCount}_meals">Included Meals</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="activities-container" data-day="${dayCount}">
+                                            <div class="activity-row mb-3">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-floating">
+                                                            <input type="time" class="form-control" name="day${dayCount}_activity1_time">
+                                                            <label>Time</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="form-floating">
+                                                            <input type="text" class="form-control" name="day${dayCount}_activity1_title" placeholder="Activity Title">
+                                                            <label>Activity Title</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-floating mt-2">
+                                                    <textarea class="form-control" name="day${dayCount}_activity1_description" style="height: 80px" placeholder="Activity Description"></textarea>
+                                                    <label>Activity Description</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addActivity(${dayCount})">
+                                            <i class="fas fa-plus"></i> Add Activity
+                                        </button>
+                                    </div>
+                                `;
+                                document.getElementById('itineraryContainer').insertAdjacentHTML('beforeend', dayHtml);
+                            }
+
+                            function addActivity(day) {
+                                const container = document.querySelector(`.activities-container[data-day="${day}"]`);
+                                const activityCount = container.children.length + 1;
+                                const activityHtml = `
+                                    <div class="activity-row mb-3">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-floating">
+                                                    <input type="time" class="form-control" name="day${day}_activity${activityCount}_time">
+                                                    <label>Time</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="form-floating">
+                                                    <input type="text" class="form-control" name="day${day}_activity${activityCount}_title" placeholder="Activity Title">
+                                                    <label>Activity Title</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-floating mt-2">
+                                                    <textarea class="form-control" name="day${day}_activity${activityCount}_description" style="height: 80px" placeholder="Activity Description"></textarea>
+                                                    <label>Activity Description</label>
+                                                </div>
+                                    </div>
+                                `;
+                                container.insertAdjacentHTML('beforeend', activityHtml);
+                            }
+                        </script>
+                    </div>
+
+                    <!-- Live Preview -->
+                    <div class="col-md-4">
+                        <div class="form-section">
+                            <h4>Live Preview</h4>
+                            <div class="preview-card">
+                                <div class="preview-image">
+                                    <img id="previewImg" src="{% static 'images/placeholder.jpg' %}" alt="Package Preview">
+                                    <span class="preview-badge" id="previewDuration">3N/4D</span>
+                                </div>
+                                <div class="preview-content">
+                                    <h5 id="previewTitle">Package Title</h5>
+                                    <div class="package-features">
+                                        <div class="feature-item">
+                                            <i class="fas fa-bus"></i>
+                                            <span>Return Bus Tickets</span>
+                                        </div>
+                                        <div class="feature-item">
+                                            <i class="fas fa-hotel"></i>
+                                            <span id="previewHotelCategory">4 Star Hotel</span>
+                                        </div>
+                                        
+                                        <div class="feature-item">
+                                            <i class="fas fa-utensils"></i>
+                                            <span>Selected Meals</span>
+                                        </div>
+                                    </div>
+                                    <div class="price-section mt-3">
+                                        <div>
+                                            <small class="text-success">Best Price Guaranteed</small>
+                                            <div class="price" id="previewPrice">₹0</div>
+                                            <small class="text-muted">Per Person</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Destination handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const destinationSection = document.getElementById('destinationSection');
+            const destinationSelect = document.getElementById('destinationSelect');
+            const continueBtn = document.getElementById('continueBtn');
+            const packageForm = document.getElementById('packageForm');
+            const destinationDisplay = document.getElementById('destinationDisplay');
+
+            // Hide the form initially
+            packageForm.style.display = 'none';
+
+            // Fetch destinations
+            fetch('/get_destinations/')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.destinations) {
+                        data.destinations.forEach(dest => {
+                            const option = document.createElement('option');
+                            option.value = dest;
+                            option.textContent = dest;
+                            destinationSelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error fetching destinations:', error));
+
+            // Enable/disable continue button based on selection
+            destinationSelect.addEventListener('change', function() {
+                continueBtn.disabled = !this.value;
+            });
+
+            // Handle continue button click
+            continueBtn.addEventListener('click', function() {
+                const selectedDestination = destinationSelect.value;
+                if (selectedDestination) {
+                    // Update both the hidden input and display input
+                    document.getElementById('destination').value = selectedDestination;
+                    destinationDisplay.value = selectedDestination;
+
+                    // Hide destination section with animation
+                    destinationSection.classList.add('hidden');
+                    
+                    // Show the form with fade-in animation
+                    setTimeout(() => {
+                        packageForm.style.display = 'block';
+                        packageForm.style.opacity = '0';
+                        setTimeout(() => {
+                            packageForm.style.opacity = '1';
+                            packageForm.style.transition = 'opacity 0.5s ease-in-out';
+                        }, 50);
+                    }, 500);
+                }
+            });
+        });
+
+        // Live Preview Updates
+        document.getElementById('packageForm').addEventListener('input', function(e) {
+            // Update title
+            if (e.target.id === 'packageTitle') {
+                document.getElementById('previewTitle').textContent = e.target.value || 'Package Title';
+            }
+            
+            // Update duration
+            if (e.target.id === 'duration_nights' || e.target.id === 'duration_days') {
+                const nights = document.getElementById('duration_nights').value || '0';
+                const days = document.getElementById('duration_days').value || '0';
+                document.getElementById('previewDuration').textContent = `${nights}N/${days}D`;
+            }
+            
+            // Update price
+            if (e.target.id === 'price') {
+                document.getElementById('previewPrice').textContent = `₹${parseFloat(e.target.value || 0).toLocaleString('en-IN')}`;
+            }
+            
+            // Update hotel category
+            if (e.target.id === 'hotelCategory') {
+                document.getElementById('previewHotelCategory').textContent = `${e.target.value} Star Hotel`;
+            }
+        });
+
+        // Image Preview
+        document.getElementById('mainImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('packageForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            try {
+                const formData = new FormData(this);
+                const response = await fetch(this.action || window.location.href, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Show success modal
+                    const successModal = document.getElementById('successModal');
+                    successModal.style.display = 'flex';
+                    
+                    // Redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '{% url "mod_home" %}';
+                    }, 2000);
+                } else {
+                    // Show error modal with message
+                    const errorModal = document.getElementById('errorModal');
+                    const errorMessage = document.getElementById('errorMessage');
+                    errorMessage.textContent = result.error || 'Something went wrong. Please try again.';
+                    errorModal.style.display = 'flex';
+                    
+                    // Hide error modal after 3 seconds
+                    setTimeout(() => {
+                        errorModal.style.display = 'none';
+                    }, 3000);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                // Show error modal for network/other errors
+                const errorModal = document.getElementById('errorModal');
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.textContent = 'Network error. Please check your connection and try again.';
+                errorModal.style.display = 'flex';
+                
+                // Hide error modal after 3 seconds
+                setTimeout(() => {
+                    errorModal.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+
+    <!-- Success Modal -->
+    <div class="result-modal" id="successModal">
+        <div class="modal-content success">
+            <div class="circle-animation">
+                <i class="fas fa-check checkmark"></i>
+            </div>
+            <h4>Success!</h4>
+            <p>Package has been successfully added.</p>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="result-modal" id="errorModal">
+        <div class="modal-content error">
+            <div class="circle-animation">
+                <i class="fas fa-times cross"></i>
+            </div>
+            <h4>Error!</h4>
+            <p id="errorMessage">Something went wrong. Please try again.</p>
+        </div>
+    </div>
+</body>
+</html>

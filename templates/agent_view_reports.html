@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% load static %}
+
+    <!-- Website Title -->
+    <title>Agent Safety Reports - TBSC</title>
+
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500,700&display=swap&subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600&display=swap&subset=latin-ext" rel="stylesheet">
+    <link href="{% static 'css1/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css1/fontawesome-all.css' %}" rel="stylesheet">
+    <link href="{% static 'css1/styles.css' %}" rel="stylesheet">
+
+    <!-- Favicon  -->
+    <link rel="icon" href="{% static 'images/logo1.png' %}">
+    <style>
+        body {
+            background-color: #f4f7f6;
+            color: #333333;
+        }
+        .navbar-custom {
+            background-color: #2C3E50;
+            padding: 10px 0;
+        }
+        .navbar-logo, .agent-logo {
+            height: 40px;
+            width: auto;
+            border-radius: 50%;
+        }
+        .agent-name {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .content {
+            padding-top: 80px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .card-header {
+            background-color: #ededed;;
+            color: #ffffff;
+            border-bottom: none;
+            padding: 20px;
+        }
+        .card-body {
+            padding: 30px;
+            padding-bottom: 0;
+        }
+        .table {
+            border-collapse: separate;
+            border-spacing: 0 15px;
+        }
+        .table thead th {
+            border-bottom: none;
+            background-color: #f1f3f9;
+            color: #3f51b5;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            padding: 15px;
+        }
+        .table tbody tr {
+            background-color: #ffffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .table tbody tr:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        .table td {
+            vertical-align: middle;
+            padding: 20px 15px;
+            border: none;
+        }
+        .badge {
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 30px;
+        }
+        .badge-warning {
+            background-color: #ffc107;
+            color: #000000;
+        }
+        .badge-success {
+            background-color: #28a745;
+        }
+        .badge-danger {
+            background-color: #dc3545;
+        }
+        .footer {
+            flex-shrink: 0;
+            background-color: #2C3E50;
+            color: #FFFFFF;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .filter-section {
+            background: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .status-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .status-filter {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .status-filter.active {
+            background-color: #2C3E50;
+            color: white;
+        }
+
+        .status-filter:hover {
+            transform: translateY(-2px);
+        }
+
+        .status-filter.all {
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+        }
+
+        .status-filter.pending {
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+            color: #856404;
+        }
+
+        .status-filter.approved {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .status-filter.rejected {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .report-generator-section {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+            margin: 2rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .report-generator-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .date-range-container {
+            margin-bottom: 2rem;
+        }
+
+        .date-input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .date-field {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .date-field label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2C3E50;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .date-field label i {
+            color: #3498db;
+        }
+
+        .date-field .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .date-field .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+        }
+
+        .date-field .date-focus-border {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #3498db;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .date-field .form-control:focus + .date-focus-border {
+            width: 100%;
+        }
+
+        .date-separator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0 1rem;
+            margin-top: 2rem;
+        }
+
+        .separator-line {
+            flex: 1;
+            height: 2px;
+            background: #e9ecef;
+            min-width: 20px;
+        }
+
+        .separator-text {
+            color: #6c757d;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn-action {
+            position: relative;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            min-width: 180px;
+        }
+
+        .btn-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            color: white;
+        }
+
+        .btn-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view {
+            background: #34495E;
+        }
+
+        .btn-view .btn-background {
+            background: linear-gradient(135deg, #34495E 0%, #2980b9 100%);
+            opacity: 0;
+        }
+
+        .btn-view:hover .btn-background {
+            opacity: 1;
+        }
+
+        .btn-download {
+            background: #2C3E50;
+        }
+
+        .btn-download .btn-background {
+            background: linear-gradient(135deg, #2C3E50 0%, #3498db 100%);
+            opacity: 0;
+        }
+
+        .btn-download:hover .btn-background {
+            opacity: 1;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-action:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .date-input-group {
+                flex-direction: column;
+            }
+
+            .date-separator {
+                padding: 1rem 0;
+                margin: 0;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-action {
+                width: 100%;
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .date-field .form-control:focus {
+            animation: pulse 0.3s ease-in-out;
+        }
+
+        .pdf-preview-header {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .pdf-preview-header h5 {
+            margin: 0;
+            color: #2C3E50;
+        }
+
+        .close-preview-btn {
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            padding: 5px;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .close-preview-btn:hover {
+            color: #dc3545;
+        }
+
+        .pdf-preview-content {
+            position: relative;
+            background-color: #f8f9fa;
+            min-height: 600px;
+        }
+
+        #loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'agent_welcome' %}">
+                <img src="{% static 'images/airplane.gif' %}" alt="TBSC Logo" class="navbar-logo mr-2">
+            </a>
+            <div class="ml-auto d-flex align-items-center">
+                <img src="{% static 'images/agent.gif' %}" alt="Agent" class="agent-logo mr-2">
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="agent-name">{{ agent.first_name }} {{ agent.last_name }}</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'agent_welcome' %}"><i class="fas fa-tasks"></i>Home</a>
+                        <a class="dropdown-item" href="{% url 'safety_notification_report' %}"><i class="fas fa-user-cog"></i> Submit Safety Report</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'signout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- end of navbar -->
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="mb-0">Your Safety Notification Reports</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="filter-section">
+                                <div class="status-filters" id="statusFilters">
+                                    <button class="status-filter all active" data-status="all">All Reports</button>
+                                    <button class="status-filter pending" data-status="Pending">Pending</button>
+                                    <button class="status-filter approved" data-status="Approved">Approved</button>
+                                    <button class="status-filter rejected" data-status="Rejected">Rejected</button>
+                                </div>
+                                
+                                <div class="report-generator-section">
+                                    <div class="date-range-container">
+                                        <div class="date-input-group">
+                                            <div class="date-field">
+                                                <label for="from_date">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                    From Date
+                                                </label>
+                                                <input type="date" id="from_date" name="from_date" class="form-control">
+                                                <div class="date-focus-border"></div>
+                                            </div>
+                                            <div class="date-separator">
+                                                <span class="separator-line"></span>
+                                                <span class="separator-text">to</span>
+                                                <span class="separator-line"></span>
+                                            </div>
+                                            <div class="date-field">
+                                                <label for="to_date">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                    To Date
+                                                </label>
+                                                <input type="date" id="to_date" name="to_date" class="form-control">
+                                                <div class="date-focus-border"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-view" onclick="viewReport()">
+                                            <div class="btn-content">
+                                                <i class="fas fa-eye"></i>
+                                                <span>View Report</span>
+                                            </div>
+                                            <div class="btn-background"></div>
+                                        </button>
+                                        <button class="btn-action btn-download" onclick="downloadReport()">
+                                            <div class="btn-content">
+                                                <i class="fas fa-download"></i>
+                                                <span>Download Report</span>
+                                            </div>
+                                            <div class="btn-background"></div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% if reports %}
+                                <div class="table-responsive">
+                                    <table class="table" id="reportsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Report Title</th>
+                                                <th>Incident Date</th>
+                                                <th>Location</th>
+                                                <th>Status</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for report in reports %}
+                                                <tr>
+                                                    <td><strong>{{ report.report_title }}</strong></td>
+                                                    <td>{{ report.incident_datetime|date:"M d, Y H:i" }}</td>
+                                                    <td>{{ report.location }}</td>
+                                                    <td>
+                                                        <span class="badge {% if report.status == 'Pending' %}badge-warning{% elif report.status == 'Approved' %}badge-success{% else %}badge-danger{% endif %}">
+                                                            {{ report.status }}
+                                                        </span>
+                                                    </td>
+                                                    <td>{{ report.description|truncatewords:20 }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <p class="text-center">You haven't submitted any safety notification reports yet.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of main content -->
+
+    <!-- PDF Preview Section -->
+    <div id="pdf-preview-container" style="display: none;">
+        <div class="pdf-preview-header">
+            <h5>Report Preview</h5>
+            <button class="close-preview-btn" onclick="closePdfPreview()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="pdf-preview-content">
+            <div id="loading-indicator" style="display: none;">
+                <div class="spinner"></div>
+                <p>Loading report...</p>
+            </div>
+            <iframe id="pdf-preview" width="100%" height="600px" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="p-small">&copy; 2024 TBSC. All rights reserved.</p>
+    </footer>
+    <!-- end of footer -->
+
+    <!-- Scripts -->
+    <script src="{% static 'js1/jquery.min.js' %}"></script>
+    <script src="{% static 'js1/popper.min.js' %}"></script>
+    <script src="{% static 'js1/bootstrap.min.js' %}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusFilters = document.querySelectorAll('.status-filter');
+            const table = document.getElementById('reportsTable');
+            const rows = table.getElementsByTagName('tr');
+
+            // Get current status from URL or default to 'all'
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentStatus = urlParams.get('status') || 'all';
+            const currentPage = urlParams.get('page') || '1';
+
+            // Filter functionality
+            statusFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    const status = this.getAttribute('data-status');
+                    
+                    // Update active state of filters
+                    statusFilters.forEach(f => f.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update URL with new status and reset to page 1
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('status', status);
+                    url.searchParams.set('page', '1');
+                    window.location.href = url.toString();
+                });
+            });
+
+            // Set active filter based on URL
+            statusFilters.forEach(filter => {
+                if (filter.getAttribute('data-status') === currentStatus) {
+                    filter.classList.add('active');
+                }
+            });
+        });
+
+        function validateDates() {
+            const fromDate = document.getElementById('from_date').value;
+            const toDate = document.getElementById('to_date').value;
+            
+            if (!fromDate || !toDate) {
+                alert('Please select both from and to dates');
+                return false;
+            }
+
+            if (fromDate > toDate) {
+                alert('From date must be before or equal to to date');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function getReportUrl(action) {
+            const fromDate = document.getElementById('from_date').value;
+            const toDate = document.getElementById('to_date').value;
+            const activeFilter = document.querySelector('.status-filter.active');
+            const status = activeFilter.getAttribute('data-status');
+            
+            let url = `{% url 'generate_agent_report' %}?from_date=${fromDate}&to_date=${toDate}&action=${action}`;
+            if (status !== 'all') {
+                url += `&status=${status}`;
+            }
+            
+            return url;
+        }
+
+        function viewReport() {
+            if (!validateDates()) return;
+            
+            const previewContainer = document.getElementById('pdf-preview-container');
+            const pdfPreview = document.getElementById('pdf-preview');
+            const loadingIndicator = document.getElementById('loading-indicator');
+            
+            // Show the preview container and loading indicator
+            previewContainer.style.display = 'block';
+            loadingIndicator.style.display = 'block';
+            
+            // Clear previous PDF
+            pdfPreview.src = '';
+            
+            // Set the iframe source to the preview URL
+            pdfPreview.src = getReportUrl('preview');
+            
+            // Handle iframe load events
+            pdfPreview.onload = function() {
+                loadingIndicator.style.display = 'none';
+            };
+            
+            pdfPreview.onerror = function() {
+                loadingIndicator.style.display = 'none';
+                alert('Error loading the report. Please try again.');
+                closePdfPreview();
+            };
+            
+            // Scroll to the preview
+            previewContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function downloadReport() {
+            if (!validateDates()) return;
+            
+            // Open download URL in new tab
+            window.open(getReportUrl('download'), '_blank');
+        }
+        
+        function closePdfPreview() {
+            const previewContainer = document.getElementById('pdf-preview-container');
+            const pdfPreview = document.getElementById('pdf-preview');
+            const loadingIndicator = document.getElementById('loading-indicator');
+            
+            // Clear the iframe source
+            pdfPreview.src = '';
+            
+            // Hide the preview container and loading indicator
+            previewContainer.style.display = 'none';
+            loadingIndicator.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

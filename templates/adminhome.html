@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400&display=swap" rel="stylesheet">
+
+
+
+  <!-- Vendor CSS Files -->
+ 
+  
+ 
+
+
+
+
+  
+  
+  <!-- <link href="/static/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet"> -->
+  <link href="/static/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  
+<!-- <link rel="stylesheet" href="{% static 'css/adminhome.css' %}"> -->
+
+    <title>FaceTracePro-admin</title>
+   <style>
+    *{
+    margin:0px;
+    padding:0px;
+}
+.main{
+    /* background-color:rgb(3, 19, 54); */
+    min-height:77vh;
+    /* background-color:rgb(1, 12, 36); */
+    background-color:rgb(4, 14, 36);
+
+}
+.heading{
+    font-size:30px;
+    font-weight: 300;
+   
+    color:white;
+    margin-left:20px;
+    font-family: "poppins";
+}
+.elementgrp{
+    margin-left:40px;
+    font-size:16px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "poppins";
+
+}
+.element{
+    margin:30px;
+    color:white;
+    
+}
+.element2{
+    margin:30px;
+    color:white;
+    
+    
+}
+
+.special{
+    border:2px solid rgb(164, 164, 220);
+    border-radius: 30px;
+    padding:7px;
+}
+.description{
+    padding:20px;
+    margin-left:10px;
+    padding-top:70px;
+    width:50%;
+
+}
+.head1{
+    
+    font-size:80px;
+    width:max-content;
+    color:white;
+    margin-bottom:10px;
+}
+.head2{
+    color:rgb(208, 217, 224);
+    font-size:20px;
+    text-align: justify;
+    
+
+}
+.image{
+    width:500px;
+    height:auto;
+    animation: moveUpDown 2.5s infinite alternate;
+}
+@keyframes moveUpDown {
+            0% {
+                transform: translateY(0); /* Start position */
+            }
+            100% {
+                transform: translateY(-40px); /* End position */
+            }
+        }
+.hero{
+    display:flex;
+    justify-content: space-around;
+    align-items:center;
+    height:60vh;
+}
+.navbar{
+    display:flex;
+    justify-content: space-evenly;
+    align-items:center;
+    font-family: "poppins";
+   
+
+}
+.container{
+    background-color: rgb(220,220,223);
+    min-height:100vh;
+}
+
+.atag{
+color:white;
+text-decoration: none;
+}
+.atag:hover {
+    color: rgb(93, 173, 237); /* Change the color to blue when hovered */
+}
+.atag2{
+color:white;
+text-decoration: none;
+font-size: 16px;;
+}
+.atag2:hover {
+    color: rgb(93, 173, 237); /* Change the color to blue when hovered */
+}
+.footer {
+            background-color:white;
+            color:#31517e;
+            padding: 50px 0;
+            display: flex;
+            flex-wrap: wrap;
+             padding-left: 30px;
+            padding-right: 30px; 
+
+            justify-content: space-between;
+            font-family: 'Poppins', sans-serif;
+        }
+      .footer h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color:#7b8ca3;
+           
+        }
+        .footer-link h3{
+            color:#7b8ca3;
+            font-size: 24px; 
+           
+        }
+   
+
+        .footer p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #5e5e5e;
+        }
+
+        .footer-link {
+            display: flex;
+            flex-direction: column;
+            
+           
+
+        }
+
+        .footer-link a {
+            padding-top: 10px;
+            color:#31517e;
+           line-height: 2;
+            text-decoration: none;
+            transition: color 0.3s;
+           
+          
+        }
+
+        .footer-link a:hover {
+            color: #719ddb;
+        }
+        .footer-newsletter {
+  padding: 50px 0;
+
+  text-align: center;
+  font-size: 15px;
+ margin-left: 400px;;
+  color: #444444;
+  width:50%;
+}
+.foot2{
+    background:rgb(220,220,223);
+}
+
+
+
+.copyright {
+    font-size: 20px;
+    padding-bottom: 40px;
+    color:#fff;
+}
+.desc {
+    text-align: center;
+    padding-top: 30px;
+    margin-left: 0;
+    background-color:rgb(3, 19, 54);
+  
+}
+.log{
+   
+    height:40px;
+    width:70px;
+    border-radius:10px;
+background-color: #719ddb;
+outline: none;
+border:none;
+}
+
+
+
+
+ 
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+   </style>
+</head>
+
+<body>
+        <div class="container">
+        <div class="main">
+            <div class="navbar">
+                <div class="heading">FaceTrace Pro</div>
+                <div class="elementgrp">
+                    <div class="element"><a href="" class="atag">Home</a></div>
+                    <div class="element"><a href="/addpolice" class="atag">Add Police Stations</a></div>
+                    <div class="element"><a href="/viewpolice" class="atag">View Police Stations</a></div>
+                    <div class="element"><a href="/viewuser" class="atag">View Users</a></div>
+                    <div class="element"><a href="/missing3" class="atag">All Missing Cases</a></div>
+                    <div class="element special"><a href="/surveillance" class="atag">Surveillance Mode</a></div>
+                    <div class="element2"><button class="log"><a href="/logout" class="atag2">Logout</a></button></div>
+                </div>
+            </div>
+            <div class="hero">
+                <div class="description">
+                    <div class="head1">Missing Person Tracker</div>
+                    <div class="head2">FaceTrace Pro, powered by AI and ML, is a dedicated initiative committed to
+                        finding and reuniting missing individuals with their families across India. We leverage
+                        cutting-edge technology and compassionate teamwork to ensure that no one is left behind.</div>
+                </div>
+                <img class="image" src="{% static 'images/hero-img.png'%}" alt="notimg">
+            </div>
+        </div>
+
+        
+          <div class="footer">
+            
+              <div class="footer-side">
+          
+            
+                <h3>FaceTrace Pro</h3>
+                <p class="face">
+                  42 MG Road <br>
+                  Trivandrum, Kerala, 695001<br>
+                  India <br><br>
+                  <strong>Phone:</strong> +91 99895 54885<br>
+                  <strong>Email:</strong> contact@facetracepro.com<br>
+                </p>
+              </div>
+             
+    
+              <div class="footer-link">
+                <div class="foot3">
+                <h3>Useful Links</h3></div>
+                <ul>
+                  <li><a href="#">Home</a></li>
+                  <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
+                  <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
+                  <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+                </ul>
+              </div>
+    
+            
+    
+            
+              
+    
+            </div>
+            <div class="desc">
+              <div class="copyright">
+                &copy; Copyright <strong><span>FaceTrace Pro</span></strong>. All Rights Reserved
+              </div>
+            </div>
+          </div>
+       
+     
+    
+     
+    </div>
+</body>
+
+</html>

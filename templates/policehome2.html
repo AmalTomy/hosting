@@ -1,0 +1,802 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ police.policestation }} - Missing Persons Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #283593;
+            --accent-color: #ffc107;
+            --dark-color: #212529;
+            --light-color: #f8f9fa;
+            --text-color: #343a40;
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+        
+        /* Header styling */
+        .header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 100;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 60px;
+            margin-right: 1rem;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+        
+        .logo-text .station-type {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+        
+        .logo-text .official-text {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+        
+        /* Navigation styling */
+        .main-nav {
+            background-color: #0d1b42;
+            padding: 0.5rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            transition: all var(--transition-speed);
+            border-radius: 4px;
+            margin: 0 0.3rem;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.15);
+            font-weight: 600;
+        }
+        
+        .nav-link.special {
+            background-color: #d32f2f;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .nav-link.special:hover {
+            background-color: #b71c1c;
+            transform: translateY(-3px);
+        }
+        
+        .nav-link i {
+            margin-right: 0.5rem;
+        }
+        
+        /* Hero section styling */
+        .hero {
+            background: linear-gradient(rgba(13, 27, 66, 0.9), rgba(13, 27, 66, 0.95)), url('{% static "images/police-bg.jpg" %}') no-repeat center center;
+            background-size: cover;
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            animation: fadeInDown 1s;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s;
+            animation-delay: 0.3s;
+            animation-fill-mode: both;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            animation: fadeInUp 1s;
+            animation-delay: 0.6s;
+            animation-fill-mode: both;
+        }
+        
+        .btn-hero {
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: all var(--transition-speed);
+        }
+        
+        .btn-primary {
+            background-color: #d32f2f;
+            border-color: #d32f2f;
+        }
+        
+        .btn-primary:hover {
+            background-color: #b71c1c;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline-light:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Features section styling */
+        .features {
+            padding: 4rem 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            font-size: 1.1rem;
+            color: #6c757d;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            transition: all var(--transition-speed);
+            height: 100%;
+            text-align: center;
+            border-top: 4px solid var(--primary-color);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .feature-text {
+            color: #6c757d;
+            line-height: 1.7;
+        }
+        
+        /* Stats section styling */
+        .stats {
+            background: var(--primary-color);
+            color: white;
+            padding: 3rem 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+        
+        .stat-text {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        /* CTA section styling */
+        .cta {
+            background: url('{% static "images/cta-bg.jpg" %}') no-repeat center center;
+            background-size: cover;
+            padding: 4rem 0;
+            position: relative;
+        }
+        
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 27, 66, 0.9);
+        }
+        
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: white;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .cta-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta-text {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+        
+        /* Footer styling */
+        .footer {
+            background-color: #0d1b42;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 3rem 0 0;
+        }
+        
+        .footer-heading {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-about p {
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all var(--transition-speed);
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .footer-links i {
+            margin-right: 0.5rem;
+            color: var(--accent-color);
+        }
+        
+        .footer-contact p {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer-contact i {
+            margin-right: 1rem;
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+        
+        .footer-newsletter p {
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .newsletter-form {
+            position: relative;
+        }
+        
+        .newsletter-input {
+            width: 100%;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            border: none;
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .newsletter-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .newsletter-btn {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            bottom: 5px;
+            border-radius: 4px;
+            padding: 0 1.5rem;
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+        
+        .newsletter-btn:hover {
+            background-color: #e0a800;
+        }
+        
+        .footer-bottom {
+            background-color: #071428;
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        .footer-bottom p {
+            margin-bottom: 0;
+        }
+        
+        /* Animation keyframes */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+                padding: 1rem;
+            }
+            
+            .logo {
+                margin-bottom: 1rem;
+                justify-content: center;
+            }
+            
+            .nav-container {
+                flex-wrap: wrap;
+            }
+            
+            .nav-link {
+                margin: 0.3rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 3rem 0;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .feature-card {
+                margin-bottom: 2rem;
+            }
+            
+            .stat-item {
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="{% static 'images/police-emblem.png' %}" alt="Police Emblem" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Indian_Police_Service_Logo.svg/1200px-Indian_Police_Service_Logo.svg.png'">
+                <div class="logo-text">
+                    <div>{{ police.policestation }}</div>
+                    <div class="station-type">Missing Persons Investigation Unit</div>
+                    <div class="official-text">Official Portal</div>
+                </div>
+            </div>
+            <div class="user-info d-flex align-items-center">
+                <div class="me-3 text-light">
+                    <i class="fas fa-user-shield me-2"></i>Welcome, {{ police.policestation }}
+                </div>
+                <a href="/logout" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="{% url 'policehome' %}" class="nav-link active">
+                <i class="fas fa-home"></i>Home
+            </a>
+            <!-- <a href="/reportpolice" class="nav-link">
+                <i class="fas fa-file-alt"></i>Report Case
+            </a> -->
+            <a href="/missing2" class="nav-link">
+                <i class="fas fa-search"></i>All Missing Cases
+            </a>    
+            <!-- <a href="/viewcase2?police_id={{ user.id }}" class="nav-link">
+                <i class="fas fa-folder-open"></i>My Cases
+            </a> -->
+            <a href="/investigatingcase?police_id={{ user.id }}" class="nav-link">
+                <i class="fas fa-tasks"></i>Investigating Cases
+            </a>
+            <a href="/surveillance" class="nav-link special">
+                <i class="fas fa-camera"></i>Surveillance Mode
+            </a>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">{{ police.policestation }} Missing Persons Portal</h1>
+            <p class="hero-subtitle">Welcome to the official missing persons investigation portal. This system helps our officers locate missing individuals through advanced facial recognition technology and coordinated police work.</p>
+            <div class="hero-buttons">
+                <a href="/reportpolice" class="btn btn-primary btn-hero">
+                    <i class="fas fa-file-alt me-2"></i>Report New Case
+                </a>
+                <a href="/surveillance" class="btn btn-outline-light btn-hero">
+                    <i class="fas fa-camera me-2"></i>Enter Surveillance Mode
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Investigation Tools</h2>
+                <p>Our missing persons portal provides officers with essential tools to conduct efficient investigations</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <h3 class="feature-title">Facial Recognition</h3>
+                        <p class="feature-text">Scan camera feeds in real-time to identify missing persons in public spaces using advanced recognition technology.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3 class="feature-title">Case Database</h3>
+                        <p class="feature-text">Access comprehensive records of missing persons cases from across the state for better coordination between stations.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Case Management</h3>
+                        <p class="feature-text">Track all aspects of missing persons cases from initial report to resolution with our streamlined system.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="feature-title">Investigation Analytics</h3>
+                        <p class="feature-text">Gain insights through comprehensive analytics to improve investigation strategies and resource allocation.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Field Operations</h3>
+                        <p class="feature-text">Access the portal on-the-go with our mobile-responsive design for officers in the field.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Secure System</h3>
+                        <p class="feature-text">Built with the highest security standards to protect sensitive case information and personal data.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ stats.found|default:"150+" }}</div>
+                        <div class="stat-text">Missing Persons Found</div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ stats.accuracy|default:"95%" }}</div>
+                        <div class="stat-text">Recognition Accuracy</div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ stats.stations|default:"42" }}</div>
+                        <div class="stat-text">Connected Stations</div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ stats.active|default:"86" }}</div>
+                        <div class="stat-text">Active Cases</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-content">
+            <h2 class="cta-title">Begin a New Investigation</h2>
+            <p class="cta-text">Use our system to report and track missing persons cases. Our facial recognition technology can help locate missing individuals more efficiently.</p>
+            <a href="/reportpolice" class="btn btn-primary btn-lg">
+                <i class="fas fa-file-alt me-2"></i>Report New Case
+            </a>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-about">
+                        <h3 class="footer-heading">About This Portal</h3>
+                        <p>This is the official missing persons investigation portal for {{ police.policestation }}. The system is designed to help our officers locate missing individuals efficiently.</p>
+                        <p>Our mission is to reunite families and bring closure to missing persons cases through coordinated police work.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <div class="footer-links">
+                        <h3 class="footer-heading">Quick Links</h3>
+                        <ul>
+                            <li><a href="{% url 'policehome' %}"><i class="fas fa-chevron-right"></i> Home</a></li>
+                            <li><a href="/reportpolice"><i class="fas fa-chevron-right"></i> Report Case</a></li>
+                            <li><a href="/missing"><i class="fas fa-chevron-right"></i> Missing Cases</a></li>
+                            <li><a href="/surveillance"><i class="fas fa-chevron-right"></i> Surveillance</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="footer-contact">
+                        <h3 class="footer-heading">Contact Information</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> {{ police.address }}</p>
+                        <p><i class="fas fa-phone"></i> {{ police.phnnum }}</p>
+                        <p><i class="fas fa-envelope"></i> {{ user.email }}</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="footer-newsletter">
+                        <h3 class="footer-heading">Department Updates</h3>
+                        <p>Subscribe to receive updates on missing persons cases and department notices.</p>
+                        <form class="newsletter-form">
+                            <input type="email" class="newsletter-input" placeholder="Official Email">
+                            <button type="submit" class="newsletter-btn">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; {% now "Y" %} {{ police.policestation }}. All Rights Reserved. Government of Kerala.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation to feature cards on scroll
+            const featureCards = document.querySelectorAll('.feature-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            featureCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+            
+            // Add animation to stat numbers
+            const statNumbers = document.querySelectorAll('.stat-number');
+            
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            statNumbers.forEach(stat => {
+                statsObserver.observe(stat);
+            });
+        });
+    </script>
+</body>
+
+</html>

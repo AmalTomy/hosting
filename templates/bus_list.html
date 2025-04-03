@@ -1,0 +1,443 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/busstyle.css' %}" rel="stylesheet">
+    <style>
+        /* Existing styles */
+        
+        /* Recommendation styles */
+        .recommendation-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 1;
+        }
+        
+        .recommendation-badge .badge {
+            border-radius: 0 4px 0 4px;
+            padding: 8px 12px;
+        }
+        
+        .primo {
+            position: relative;
+        }
+        
+        .recommendation-reasons {
+            margin-top: 5px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .recommendation-reasons .reason {
+            margin: 3px 0;
+        }
+        
+        .recommendation-reasons .reason i {
+            margin-right: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .bus-card.recommended {
+            border-left: 4px solid #28a745;
+            background-color: #f8fff9;
+        }
+        
+        /* Existing styles continue */
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2C3E50;">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'welcome' %}">
+                <img src="{% static 'images/airplane.gif' %}" alt="TBSC Logo" class="navbar-logo">
+            </a>            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'welcome' %}" style="padding-left: 1050px; color: #ffffff;">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'your_bookings' %}" style="color: #ffffff;">My Bookings</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="left_section">
+            <div class="search-bar">
+                <input type="text" id="filter-search" placeholder="Search Buses...">
+                <span class="separator">|</span>
+                <span class="search-icon">&#128269;</span>
+            </div>
+            <div class="filter_header">
+                <h6>FILTERS</h6>
+                <button id="reset_filters" class="reset_btn">RESET</button>
+              </div>
+            
+            <div class="filter_div">
+                <h6>DEPARTURE TIME</h6>
+                <div class="filter_option">
+                    <input type="checkbox" id="before_6am">
+                    <label for="before_6am"><i class="icon fl icon-morning"></i> Before 6 am (<span id="before_6am_count">0</span>)</label>
+                </div>
+                <div class="filter_option">
+                    <input type="checkbox" id="6am_to_12pm">
+                    <label for="6am_to_12pm"><i class="far fa-clock"></i> 6 am to 12 pm (<span id="6am_to_12pm_count">0</span>)</label>
+                </div>
+                <div class="filter_option">
+                    <input type="checkbox" id="12pm_to_6pm">
+                    <label for="12pm_to_6pm"><i class="far fa-clock"></i> 12 pm to 6 pm (<span id="12pm_to_6pm_count">0</span>)</label>
+                </div>
+                <div class="filter_option">
+                    <input type="checkbox" id="after_6pm">
+                    <label for="after_6pm"><i class="far fa-clock"></i> After 6 pm (<span id="after_6pm_count">0</span>)</label>
+                </div>
+            </div>
+            <div class="filter_div">
+                <h6>BUS TYPES</h6>
+                <div class="filter_option">
+                    <input type="checkbox" id="sleeper">
+                    <label for="sleeper"><i class="fas fa-bed"></i> SLEEPER (<span id="sleeper_count">0</span>)</label>
+                </div>
+                <div class="filter_option">
+                    <input type="checkbox" id="ac">
+                    <label for="ac"><i class="fas fa-snowflake"></i> SEMI-SLEEPER (<span id="semi_sleeper_count">0</span>)</label>
+                </div>
+            </div>
+            <div class="filter_div">
+                <h6>ARRIVAL TIME</h6>
+                <div class="filter_option">
+                    <input type="checkbox" id="arrival_before_6am">
+                    <label for="arrival_before_6am"><i class="far fa-sun"></i> Before 6 am (<span id="arrival_before_6am_count">0</span>)</label>
+                </div>
+                <div class="filter_option">
+                    <input type="checkbox" id="arrival_6am_to_12pm">
+                    <label for="arrival_6am_to_12pm"><i class="far fa-clock"></i> 6 am to 12 pm (<span id="arrival_6am_to_12pm_count">0</span>)</label>
+                </div>
+                <div class="filter_option">
+                    <input type="checkbox" id="arrival_12pm_to_6pm">
+                    <label for="arrival_12pm_to_6pm"><i class="far fa-clock"></i> 12 pm to 6 pm (<span id="arrival_12pm_to_6pm_count">0</span>)</label>
+                </div>
+                <div class="filter_option">
+                    <input type="checkbox" id="arrival_after_6pm">
+                    <label for="arrival_after_6pm"><i class="far fa-clock"></i> After 6 pm (<span id="arrival_after_6pm_count">0</span>)</label>
+                </div>
+            </div>
+        </div>
+        <div class="right_section">
+            <div class="header-bar">
+                <span class="location">{{ source|default:"Source" }}</span>
+                <i class="fas fa-arrow-right arrow"></i>
+                <span class="location">{{ destination|default:"Destination" }}</span>
+                <span class="date">{{ date|date:"d M"|default:"Date" }} <span>{{ date|date:"D"|default:"Day" }}</span></span>
+                <a href="{% url 'booking' %}"><button class="modify-btn">Modify</button></a>
+            </div>
+            
+            <div id="header_images">
+              <img src="https://st.redbus.in/Images//ReddealsCards/IND/primo1_MainCard.png" alt="">
+              <img src="https://s3.rdbuz.com/Images/ReddealsCards/IND/Returnonward_MainCard.png" alt="">
+              <img src="https://s3.rdbuz.com/Images/ReddealsCards/IND/FlexiTicket_MainCard.png" alt="">
+              <img src="https://s3.rdbuz.com/Images/ReddealsCards/IND/2_10_MainCard.png" alt="">
+              <img src="https://s3.rdbuz.com/Images/ReddealsCards/IND/4_10_MainCard.png" alt="">
+            </div>
+            <table class="bus-list-table">
+                <thead>
+                    <tr>
+                        <th colspan="2"><span id="bus-count">{{ buses|length }} Bus{{ buses|length|pluralize:"es" }} found</span></th>
+                        <!-- <th>SORT BY:</th> -->
+                        <th>Departure</th>
+                        <th>Duration</th>
+                        <th>Arrival</th>
+                        <th>Ratings</th>
+                        <th>Fare</th>
+                        <th>Seats Available</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bus in buses %}
+                    <tr class="bus-info">
+                        <td colspan="9">        
+                            <div class="bus-card {% if bus.is_recommended %}recommended{% endif %}">
+                                <div class="primo">
+                                    {% if bus.is_recommended %}
+                                    <div class="recommendation-badge">
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-star"></i> Recommended for You
+                                        </span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="bus-card-content">
+                                    
+                                    <div class="bus-details">
+                                        <img class="operator_logo" src="https://www.redbus.in/images/reviews/primo_logo.svg" alt="Primo">
+                                        <div class="bus-info-row">
+                                            
+                                        </div>
+                                        <div class="bus_details">
+                                            <p class="bold">{{ bus.bus_name|default:"Bus Name Not Available" }}</p>
+                                            <p>{{ bus.bus_type|default:"Bus Type Not Available" }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="departure">
+                                        <p class="bold">{{ bus.departure_time|time:"H:i"|default:"--:--" }}</p>
+                                        <p>{{ bus.departure_location|default:"Departure Location Not Available" }}</p>
+                                    </div>
+                                    <div class="duration">
+                                        <p>{{ bus.duration|default:"Duration Not Available" }}</p>
+                                    </div>
+                                    <div class="arrival">
+                                        <p class="bold">{{ bus.arrival_time|time:"H:i"|default:"--:--" }}</p>
+                                        <p>{{ bus.destination_location|default:"Destination Location Not Available" }}</p>
+                                    </div>
+                                    <div class="ratings">
+                                        <p class="rating"><i class="fa-regular fa-star"></i>{{ bus.avg_rating|default:"N/A" }}</p>
+                                    </div>
+                                    <div class="fare">
+                                        <p>Starts from</p>
+                                        <p class="bold">INR {{ bus.ticket_price|default:"N/A" }}</p>
+                                    </div>
+                                    <div class="seats">
+                                        <p id="available-seats-{{ bus.bus_id }}">{{ bus.available_seats }} Seats Available</p>
+                                    </div>
+                                </div>
+                                <div class="extra_features_row">
+                                    <ul class="facility_icons">
+                                        <li title="Snacks"><i class="fa-solid fa-cookie"></i></li>
+                                        <li title="Charging Point"><i class="fa-solid fa-plug"></i></li>
+                                        <li title="Toilet"><i class="fa-solid fa-restroom"></i></li>
+                                    </ul>
+                                     <div class="interactive-links">
+                                        <a href="{% url 'packages' %}?bus_id={{ bus.bus_id }}" class="packages-btn">Packages</a>
+                                        <a href="#" class="feedback-btn" data-bus-id="{{ bus.bus_id }}">Feedbacks</a>
+                                        <a href="#" class="images-btn" data-bus-id="{{ bus.bus_id }}">Images</a>
+                                    </div>
+                                    <button class="view_seat_btn" data-bus-id="{{ bus.bus_id }}" data-ticket-price="{{ bus.ticket_price|default:'0' }}">View Seats</button>
+                                </div>
+                                <div class="feedback-section" id="feedback-section-{{ bus.bus_id }}" style="display: none;">
+                                    <div class="feedback-content">
+                                        <div class="rating-section">
+                                            <div class="average-rating">
+                                                <h4>Average Rating</h4>
+                                                <div class="rating-display">
+                                                    <span class="rating-number">{{ bus.average_rating|default:"0.0" }}</span>
+                                                    <div class="rating-stars">
+                                                        {% for i in "12345" %}
+                                                            {% if forloop.counter <= bus.average_rating %}
+                                                                <i class="fas fa-star"></i>
+                                                            {% else %}
+                                                                <i class="far fa-star"></i>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="rating-distribution">
+                                                {% for rating, count in bus.rating_distribution.items %}
+                                                    <div class="rating-bar">
+                                                        <span class="rating-label">{{ rating }} ★</span>
+                                                        <div class="progress">
+                                                            <div class="progress-bar" role="progressbar" style="width: {{ count }}%"></div>
+                                                        </div>
+                                                        <span class="rating-count">{{ count }}%</span>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="recent-feedbacks">
+                                            <h4>Recent Feedbacks</h4>
+                                            {% for feedback in bus.get_recent_feedbacks %}
+                                                <div class="feedback-item">
+                                                    <div class="feedback-header">
+                                                        <div class="rating-stars">
+                                                            {% for i in "12345" %}
+                                                                {% if forloop.counter <= feedback.rating %}
+                                                                    <i class="fas fa-star"></i>
+                                                                {% else %}
+                                                                    <i class="far fa-star"></i>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </div>
+                                                        <span class="feedback-date">{{ feedback.created_at|date:"M d, Y" }}</span>
+                                                    </div>
+                                                    <p class="feedback-text">{{ feedback.comment }}</p>
+                                                </div>
+                                            {% empty %}
+                                                <p>No feedbacks yet.</p>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="liked-features">
+                                            <h4>What People Like</h4>
+                                            <div class="features-list">
+                                                {% for feature in bus.get_liked_features %}
+                                                    <span class="feature-tag">{{ feature }}</span>
+                                                {% empty %}
+                                                    <p>No liked features yet.</p>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="image-section" id="image-section-{{ bus.bus_id }}" style="display: none;">
+                                    <div class="image-content">
+                                        {% for image in bus.images.all %}
+                                            <div class="bus-image">
+                                                <img src="{{ image.image.url }}" alt="Bus Image">
+                                            </div>
+                                        {% empty %}
+                                            <p>No images available.</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9">No buses found for this route.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background-color: #2C3E50; color: #ffffff;">
+        <div class="container">
+            <p>&copy; 2023 Bus Booking System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Add this at the end of the body -->
+    <div class="overlay"></div>
+    <div class="seat-modal">
+        <div class="seat-modal-header">
+            <h3>Select Seats</h3>
+            <button class="seat-modal-close">&times;</button>
+        </div>
+        <div class="seat-modal-content">
+            <div class="seat-map">
+                <div class="bus-layout">
+                    <div class="driver-area">
+                        <div class="driver-seat">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                    </div>
+                    <div class="seats-area">
+                        <!-- All 12 rows -->
+                        {% for row in "123456789ABC" %}
+                        <div class="row">
+                            {% for seat in "AB CD" %}
+                                {% if seat != " " %}
+                                <div class="seat {% if row in '123' %}front{% endif %}" 
+                                data-seat="{{ row }}{{ seat }}" 
+                                data-price="{{ bus.ticket_price }}">
+                                    <i class="fas fa-chair"></i>
+                                    <span class="seat-label">{{ row }}{{ seat }}</span>
+                                </div>
+                                {% else %}
+                                    <div class="aisle"></div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="seat-info">
+                    <p>Selected seats: <span id="selected-seats"></span></p>
+                    <p>Total price: ₹<span id="total-price">0.00</span></p>
+                </div>
+                <button class="confirm-btn" id="confirm-seats" disabled>Confirm Selection</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="reviewModal" class="review-modal">
+      <div class="review-modal-content">
+        <span class="close-review-modal">&times;</span>
+        <h2>All Reviews</h2>
+        <div class="review-summary">
+          <div class="overall-rating">
+            <span class="rating-value">0</span>
+            <span class="rating-star">★</span>
+          </div>
+          <div class="rating-bars"></div>
+        </div>
+        <div class="review-list"></div>
+      </div>
+    </div>
+
+    <div id="max-seats-alert" class="alert alert-warning" style="display: none;">
+        You can only select up to 8 seats per booking.
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/bus_list.js' %}"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get package parameters
+    const packageId = '{{ package_id }}';
+    const numPeople = '{{ num_people }}';
+    const packageAmount = '{{ package_amount }}';
+
+    if (packageId) {
+        // Store package details in sessionStorage
+        sessionStorage.setItem('package_details', JSON.stringify({
+            package_id: packageId,
+            num_people: numPeople,
+            package_amount: packageAmount
+        }));
+
+        // Show message if no buses are found
+        const busCount = {{ buses|length }};
+        if (busCount === 0) {
+            document.querySelector('.bus-list-table tbody').innerHTML = `
+                <tr>
+                    <td colspan="9" class="text-center py-4">
+                        <div class="alert alert-info">
+                            No buses are currently available for this package. Please try again later or contact support.
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+    }
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const busId = urlParams.get('bus_id');
+    const packageId = urlParams.get('package_id');
+    
+    // If coming from a package, automatically open the seat modal
+    if (busId && packageId) {
+        // Find the view seats button for this bus
+        const viewSeatsBtn = document.querySelector(`.view_seat_btn[data-bus-id="${busId}"]`);
+        if (viewSeatsBtn) {
+            // Trigger click event on the button
+            viewSeatsBtn.click();
+        }
+    }
+});
+</script>
+</body>
+</html>

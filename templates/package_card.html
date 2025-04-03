@@ -1,0 +1,48 @@
+{% load static %}
+
+<div class="col-md-6 animate-fade-in package-item" 
+     data-duration-days="{{ package.duration_days }}" 
+     data-duration-nights="{{ package.duration_nights }}" 
+     data-price="{{ package.price }}" 
+     data-hotel-category="{{ package.hotel_category }}">
+    <div class="package-card">
+        <div class="package-image">
+            {% if package.main_image %}
+                <img src="{{ package.main_image.url }}" alt="{{ package.title }}">
+            {% else %}
+                <img src="{% static 'images/default_package.jpg' %}" alt="{{ package.title }}">
+            {% endif %}
+            <span class="package-badge">{{ package.duration_nights }}N/{{ package.duration_days }}D</span>
+        </div>
+        <div class="package-content">
+            <h5>{{ package.title }}</h5>
+            <div class="package-features">
+                {% if package.has_bus %}
+                <div class="feature-item">
+                    <i class="fas fa-bus"></i>
+                    <span>Bus Travel</span>
+                </div>
+                {% endif %}
+                {% if package.has_hotel %}
+                <div class="feature-item">
+                    <i class="fas fa-hotel"></i>
+                    <span>{{ package.hotel_category }} Hotel</span>
+                </div>
+                {% endif %}
+                {% if package.has_meals %}
+                <div class="feature-item">
+                    <i class="fas fa-utensils"></i>
+                    <span>Selected Meals</span>
+                </div>
+                {% endif %}
+            </div>
+            <div class="price-section">
+                <div>
+                    <div class="price">₹{{ package.price }}</div>
+                    <small class="text-muted">Per Person</small>
+                </div>
+                <a href="{% url 'package_details' package.id %}{% if bus_id %}?bus_id={{ bus_id }}{% endif %}" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+    </div>
+</div>

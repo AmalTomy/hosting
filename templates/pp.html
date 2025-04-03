@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load static%}
+<title>Add Police Stations</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400&display=swap" rel="stylesheet">
+<style>
+    
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    font-family: "poppins";
+  }
+  
+  .heading{
+    background-color:rgb(3, 19, 54);
+     height:140px;
+  
+  }
+    
+    h1 {
+     margin-left: 20px;
+      color:white;
+      padding:20px;
+      font-family: "poppins";
+      font-size:30px;
+      font-weight: 300;
+    }
+    
+  .container{
+    background-color: rgb(220,220,223);
+   min-height:100vh;
+  }
+   .main{
+   
+    display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+     
+   }
+    .submain{
+      border-radius: 50px;
+      background-color: white;
+      width:60%;
+     font-size: 20px;
+     font-weight: 300;
+      padding: 50px;
+      margin:40px;
+    }
+    
+    label {
+      display: block;
+      font-weight: bold;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+     
+      border-radius: 7px;
+    
+      box-sizing: border-box;
+      outline: none;
+      height:40px;
+    }
+     
+   
+    
+   
+    
+    
+    button[type="submit"] {
+      background-color:rgb(3, 19, 54);
+      color: white;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      width:200px;
+      display: flex;
+      padding: 10px;
+    cursor: pointer;
+      justify-content: center;
+      margin-left: 290px;
+      margin-top:10px; 
+      height:40px;
+     
+     
+    }
+    
+button[type="submit"]:hover {
+      background-color:rgb(149, 149, 175);
+      ;
+    } 
+    
+    
+    .form-group{
+  display:flex;
+  flex-direction: column;
+
+    margin-bottom: 20px; 
+  }
+  label {
+    margin-bottom: 5px;
+  }
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+  
+  
+#pname,#pn,#address,#location,#email{
+    background-color: rgb(220,220,223);
+    border:none;
+}
+.write{
+    font-weight: 500;
+}
+/* .add{
+
+  font-weight: 100;
+  color: white;
+  padding-top: 10px;
+} */
+h2 {
+    text-align:center;
+      color:rgb(3, 19, 54);
+      font-weight: 500;
+      font-size: 40px;
+   padding-left: 50px;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+      background-color:white;
+      border-radius: 10px;
+    padding:10px;
+      font-family:'Times New Roman', Times, serif;
+    }
+.navbar{
+    display:flex;
+    justify-content: space-evenly;
+    align-items:center;
+    font-family: "poppins";
+    background-color: rgb(3, 19, 54);
+   
+
+}
+.heading{
+    font-size:30px;
+    font-weight: 300;
+   padding-top: 46px;;
+    color:white;
+    margin-left:20px;
+    font-family: "poppins";
+}
+.elementgrp{
+    margin-left:40px;
+    font-size:16px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "poppins";
+
+}
+.element{
+    margin:30px;
+    color:white;
+    
+}
+.element2{
+    margin:30px;
+    color:white;
+    
+    
+}
+.atag{
+color:white;
+text-decoration: none;
+}
+.atag:hover {
+    color: rgb(93, 173, 237); /* Change the color to blue when hovered */
+}
+.atag2{
+color:white;
+text-decoration: none;
+font-size: 16px;;
+}
+.atag2:hover {
+    color: rgb(93, 173, 237); /* Change the color to blue when hovered */
+}
+.log{
+   
+   height:40px;
+   width:70px;
+   border-radius:10px;
+background-color: #719ddb;
+outline: none;
+border:none;
+}
+.special{
+    border:2px solid rgb(164, 164, 220);
+    border-radius: 30px;
+    padding:7px;
+}
+
+    
+</style>
+
+</head>
+<body>
+  <div class="container">
+    <!-- <div class="heading">
+  <h1>FaceTrace Pro</h1>
+  <h2 class="add">Add Police Station</h2>
+</div> -->
+
+
+<div class="navbar">
+  <div class="heading">FaceTrace Pro</div>
+  <div class="elementgrp">
+      <div class="element"><a href="/adminhome" class="atag">Home</a></div>
+      <div class="element"><a href="/addpolice" class="atag">Add Police Stations</a></div>
+      <div class="element"><a href="/viewpolice" class="atag">View Police Stations</a></div>
+      <div class="element"><a href="/viewuser" class="atag">View Users</a></div>
+      <div class="element"><a href="/missing3" class="atag">All Missing Cases</a></div>
+      <div class="element special"><a href="/surveillance" class="atag">Surveillance Mode</a></div>
+      <div class="element2"><button class="log"><a href="/logout" class="atag2">Logout</a></button></div>
+  </div>
+</div>
+<h2 class="add">Add Police Station</h2>
+  <form action="" method="POST">
+    {% csrf_token %}
+  <div class="main">
+   
+    <div class="submain">
+<div class="form-group">
+    
+      <label for="pname" class="write">Police Station Name</label>
+      <input type="text" id="pname" name="policestation" required>
+      <label for="location" class="write">Location</label>
+      <input type="text" id="location" name="location" required>
+      <label for="address" class="write">Address</label>
+      <input type="text" id="address" name="address" required>
+      <label for="pn" class="write">Phone Number</label>
+      <input type="text" id="pn" name="pn" required>
+      <label for="email" class="write">Email </label>
+      <input type="email" id="email" name="email" required>
+      <button type="submit" class="bttn" onclick="showAlert()">Register</button>
+
+</div>
+</div>  
+</form>
+</div>
+<script>
+  function showAlert() {
+      alert('Registered successfully!');
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<title>Report Case User</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400&display=swap" rel="stylesheet">
+
+<style>
+  
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+  }
+  html,body{
+    margin: 0;
+    padding:0;
+    height:100%;
+    overflow-y: auto; 
+    overflow-x: hidden;
+  }
+  
+  .heading{
+    background-color:rgb(3, 19, 54);
+     height:140px;
+  }
+  
+
+    
+    h1 {
+     margin-left: 20px;
+      color:white;
+      padding:20px;
+      font-family: "poppins";
+      font-size:30px;
+      font-weight: 300;
+    }
+    
+    h2 {
+      text-align: center;
+      color:white;
+      font-weight: 300;
+      font-size: 40px;
+    }
+  
+    .form-group {
+     
+    
+      display: flex;
+      justify-content: space-between;
+   
+    }
+    #firstName, #lastName{
+      width:500px;
+    }
+    .form-group1{
+      display:flex;
+     
+      justify-content: space-between;
+    }
+    #fathersName,#dateOfBirth{
+      width:500px;
+      outline: none;
+  
+    }
+    .form-group3{
+      display:flex;
+     
+      justify-content: space-between;
+    }
+  
+   #email,#phoneNumber{
+      width:500px;
+    } 
+    #address{
+      height:40px;
+      
+    }
+    .form-group4{
+      display:flex;
+      
+      justify-content: space-between;
+    
+    }
+  
+    #aadharNumber,#missingDate,#location,#address{
+      width:500px;
+    }
+    .main{
+      background-color: rgb(220,220,223);
+      height: 80%;
+      
+    }
+    .submain{
+      border-radius: 50px;
+      background-color: white;
+      width:90%;
+      margin: auto;
+     font-size: 20px;
+     font-weight: 300;
+      padding: 60px;
+    }
+    
+    label {
+      display: block;
+      
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+      outline: none;
+    
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    
+    input[type="date"],
+    input[type="file"] {
+      outline: none;
+    
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+  
+    
+   
+   
+    .form-group5{
+      
+      display:flex;
+      justify-content: space-between;
+     
+    }
+    .gender-options {
+  display: flex !important;
+  width:500px;
+ justify-content: flex-start !important; 
+ padding-top: 10px;;
+
+
+
+ 
+}
+.gender-options input[type="radio"] {
+ padding-right: 50px;
+ margin-left: 0px !important;
+}
+ 
+
+
+
+  .gender-options label {
+
+    margin-left: 7px ;
+  margin-right: 142px ;
+} 
+
+
+ 
+
+     
+     
+    
+    .form-group6{
+      display:flex;
+      justify-content: space-between;
+   
+    
+    }
+  
+    
+    button[type="submit"] {
+      background-color:rgb(3, 19, 54);
+      color: white;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      width:100px;
+    }
+    
+    button[type="submit"]:hover {
+      background-color:rgb(220,220,223);
+
+    }
+    
+    .privacy-note {
+      font-size: 12px;
+      color: #666;
+    }
+    
+    .file-status {
+      font-size: 12px;
+      color: #666;
+    }
+    .form-group,
+  .form-group1,
+  .form-group2,
+  .form-group3,
+  .form-group4,
+  .form-group5,
+  .form-group6 {
+    margin-bottom: 20px; 
+  }
+  label {
+    margin-bottom: 5px;
+  }
+  input,
+  textarea,
+  select {
+    outline: none;
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+  
+  button {
+    padding: 10px;
+    cursor: pointer;
+    margin-bottom: 5px;;
+  }
+  #image{
+    width:500px;
+  }
+  .container{
+    min-height: 100vh;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+    .success {
+      
+
+     /* Green background */
+    color:rgb(19, 7, 7); /* White text color */
+    padding: 15px; /* Some padding */
+    /* Rounded corners */
+     /* Add some margin to separate it from other elements */
+    text-align: center; /* Center the text */
+    font-size: 44px; 
+    padding-top:20px;
+    min-height: 90px;;/* Adjust the font size */
+}
+.custom-alert {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    max-width: 400px; /* Adjust according to your preference */
+}
+
+.custom-alert .alert-content {
+    text-align: center;
+}
+
+.custom-alert h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #333;
+}
+
+.custom-alert .ok-btn {
+  background-color:rgb(3, 19, 54);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.custom-alert .ok-btn:hover {
+    background-color: rgb(220, 220, 223);
+}
+
+.custom-alert .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 24px;
+    color: #666;
+}
+
+
+
+ 
+    
+    
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="heading">
+  <h1>FaceTrace Pro</h1>
+  <h2>Report Missing Case</h2>
+ 
+</div>
+
+ 
+
+ 
+  <form action="/reportuser/" method="POST" enctype="multipart/form-data"  id="reportForm">
+    {%csrf_token%}
+  <div class="main">
+    <!-- {% if message %} 
+    <h1 class="success" > <i>Registered Successfully</i></h1>
+    {% endif %} -->
+    <div class="submain">
+<div class="form-group">
+    <div>
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" placeholder="Enter Your First Name" class="inp" name="first_name">
+    </div>
+    <div>
+ <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" placeholder="Enter your Surname" class="inp" name="last_name">
+    </div>
+</div>
+    <div class="form-group1">
+      <div>
+      <label for="address">Address</label>
+      <textarea id="address" placeholder="Enter your Address" class="inp" name="address"></textarea>
+    </div>
+     
+    <div>
+      <label for="dateOfBirth">Date of Birth</label>
+      <input type="date" id="dateOfBirth" placeholder="dd-mm-yyyy" class="inp" name="dob">
+    </div>
+    </div>
+    
+      
+    
+    <div class="form-group4">
+      <div>
+        <span id="aadharError" style="color:rgb(1, 1, 24);"></span>
+      <label for="aadharNumber">Aadhar Number</label>
+      <input type="text" id="aadharNumber" placeholder="2000-10000 30000" class="inp" name="aadhar_number">
+    </div>
+    <div>
+      <label for="missingDate">Missing Date</label>
+      <input type="date" id="missingDate" placeholder="dd-mm-yyyy" class="inp" name="missing_date">
+    </div>
+    </div>
+    <div class="form-group5">
+      <div>
+
+      <label for="gender">Gender</label>
+      <div class="gender-options">
+       
+        <input type="radio" id="male" name="gender" value="male" >
+        <label for="male">Male</label>
+        <input type="radio" id="female" name="gender" value="female" >
+        <label for="female">Female</label>
+        <input type="radio" id="other" name="gender" value="other" >
+        <label for="other">Other</label>
+      </div>
+      </div>
+      <div>
+        <label for="location" >Nearby PoliceStation</label>
+        
+
+        <!-- <select name="location" id="location">
+          <option value="">--Please choose an option--</option>
+          {% for location in location %}
+              <option value="{{ location }}">{{ location }}</option>
+          {% endfor %}
+      </select> -->
+      <select name="location" id="location">
+        <option value="">--Please choose an option--</option>
+        {% for station in police_stations %}
+            <option value="{{ station }}">{{ station }}</option>
+        {% endfor %}
+    </select>
+      
+
+    </div>
+    </div>
+    <div class="form-group6">
+      <div>
+      <label for="image">Image</label>
+      <input type="file" id="image" name="image">
+      </div>
+    
+    </div>
+    <!-- <button type="submit" onclick="if (validateForm() && validateMissingDate()) { return showAlert(event); } else { return false; }">Submit</button> -->
+
+    <button type="submit" onclick="if (validateForm() && validateMissingDate()) { showAlert(event); console.log('Alert shown'); } else { return false; }">Submit</button>
+
+
+
+
+</div>  
+</form>
+</div>
+
+
+
+<div class="custom-alert" id="customAlert">
+  <div class="alert-content">
+      <h2>Registered Successfully</h2>
+      <button class="ok-btn" onclick="closeAlert()">OK</button>
+  </div>
+</div>
+
+
+
+<script>
+    // Function to show the alert box
+    function showAlert(event) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+        // Show the alert box
+        document.getElementById('customAlert').style.display = 'block';
+    }
+  
+    // Function to close the alert box and submit the form
+    function closeAlert() {
+        // Hide the alert box
+        document.getElementById('customAlert').style.display = 'none';
+        // Submit the form
+        document.getElementById('reportForm').submit();
+    }
+  
+    // Function to validate the form before submission
+    function validateForm() {
+        // Get all input fields
+        var firstName = document.getElementById('firstName').value;
+        var lastName = document.getElementById('lastName').value;
+        var address = document.getElementById('address').value;
+        var dateOfBirth = document.getElementById('dateOfBirth').value;
+        var aadharNumber = document.getElementById('aadharNumber').value;
+        var missingDate = document.getElementById('missingDate').value;
+        var location = document.getElementById('location').value;
+        var image = document.getElementById('image').value;
+        var gender = document.querySelector('input[name="gender"]:checked');
+  
+        // Check if any field is empty
+        if (!firstName || !lastName || !address || !dateOfBirth || !aadharNumber || !missingDate || !location || !image || !gender) {
+            alert('Please fill out all fields.');
+            return false;
+        }
+  
+        // Check Aadhar number length
+        if (aadharNumber.length !== 12) {
+            alert('Aadhar number must be 12 characters long.');
+            return false;
+        }
+  
+        // Check missing date validation
+        if (!validateMissingDate()) {
+            return false;
+        }
+  
+        // Show the alert box if all fields are filled out and validation passes
+        showAlert();
+        return true; // Allow form submission
+    }
+  
+    function validateMissingDate() {
+        var dob = new Date(document.getElementById('dateOfBirth').value);
+        var missingDate = new Date(document.getElementById('missingDate').value);
+  
+        // Check if the missing date is after the date of birth
+        if (missingDate <= dob) {
+            alert("Missing date should be after the date of birth.");
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
+  </script>
+
+
+
+</body>
+</html>

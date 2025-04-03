@@ -1,0 +1,657 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missing Cases - Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #1cc88a;
+            --dark-color: #5a5c69;
+            --light-color: #f8f9fc;
+            --danger-color: #e74a3b;
+            --warning-color: #f6c23e;
+            --card-border-radius: 0.75rem;
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fc;
+            color: var(--dark-color);
+            overflow-x: hidden;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0069d9;
+        }
+        
+        /* Sidebar styling */
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            min-height: 100vh;
+            transition: all var(--transition-speed);
+            background: #343a40;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            z-index: 100;
+        }
+        
+        #sidebar.active {
+            margin-left: -250px;
+        }
+        
+        #sidebar .sidebar-header {
+            padding: 1.5rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        #sidebar .sidebar-header h3 {
+            color: white;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            letter-spacing: 0.05rem;
+        }
+        
+        #sidebar ul.components {
+            padding: 1rem 0;
+        }
+        
+        #sidebar ul li {
+            position: relative;
+            margin-bottom: 0.25rem;
+        }
+        
+        #sidebar ul li a {
+            padding: 0.8rem 1.5rem;
+            font-size: 0.9rem;
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-left: 4px solid transparent;
+            transition: all var(--transition-speed);
+            font-weight: 500;
+        }
+        
+        #sidebar ul li a i {
+            margin-right: 0.5rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        #sidebar ul li a:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: white;
+        }
+        
+        #sidebar ul li.active > a {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        /* Content area styling */
+        #content {
+            width: 100%;
+            padding: 0;
+            transition: all var(--transition-speed);
+            position: relative;
+            min-height: 100vh;
+            background-color: var(--light-color);
+        }
+        
+        /* Navbar styling */
+        .navbar {
+            padding: 1rem 1.5rem;
+            background: white;
+            border: none;
+            border-radius: 0;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+        }
+        
+        .navbar-btn {
+            box-shadow: none;
+            outline: none !important;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-speed);
+        }
+        
+        .navbar-btn:hover {
+            background: #0069d9;
+            transform: rotate(180deg);
+        }
+        
+        /* Card styling */
+        .card {
+            border: none;
+            border-radius: var(--card-border-radius);
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            transition: all var(--transition-speed);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border-radius: 20px;
+            box-shadow: 10px 10px 30px #d1d1d1, -10px -10px 30px #ffffff;
+        }
+        
+        .card:hover {
+            box-shadow: 15px 15px 40px #c1c1c1, -15px -15px 40px #ffffff;
+            transform: translateY(-5px);
+        }
+        
+        .main-card {
+            background: linear-gradient(145deg, #1e2225, #0056b3);
+            color: white;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .main-card-header {
+            padding: 1.25rem 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .main-card-header i {
+            margin-right: 0.5rem;
+            font-size: 1.25rem;
+        }
+        
+        .card-img-top {
+            height: 300px;
+            object-fit: cover;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+            background-color: white;
+        }
+        
+        /* Search bar styling */
+        .search-container {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border-radius: 30px;
+            border: 2px solid var(--primary-color);
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
+        }
+        
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        /* Button styling */
+        .btn-action {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            border-radius: 0.5rem;
+            transition: all var(--transition-speed);
+            font-weight: 500;
+            margin-right: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0.125rem 0.25rem 0 rgba(58, 59, 69, 0.2);
+        }
+        
+        .btn-action i {
+            margin-right: 0.5rem;
+        }
+        
+        .btn-edit {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-delete {
+            background: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-add {
+            background: linear-gradient(145deg, #007bff, #0056b3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 0.125rem 0.25rem 0 rgba(58, 59, 69, 0.2);
+        }
+        
+        .btn-add i {
+            margin-right: 0.5rem;
+        }
+        
+        .btn-action:hover, .btn-add:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem 0 rgba(58, 59, 69, 0.3);
+            color: white;
+        }
+        
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        .bounce-in {
+            animation: bounceIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        /* Empty state styling */
+        .empty-state {
+            padding: 3rem;
+            text-align: center;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin: 20px 0;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: #d1d3e2;
+            margin-bottom: 1.5rem;
+        }
+        
+        .empty-state h4 {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state p {
+            color: #858796;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Footer styling */
+        .sticky-footer {
+            padding: 1.5rem 0;
+            background-color: white;
+            margin-top: 2rem;
+            box-shadow: 0 -0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        }
+        
+        .copyright {
+            font-size: 0.9rem;
+            color: #858796;
+        }
+        
+        /* Missing person cards grid */
+        .missing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+        
+        .person-card {
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .person-card:nth-child(1) { animation-delay: 0.1s; }
+        .person-card:nth-child(2) { animation-delay: 0.2s; }
+        .person-card:nth-child(3) { animation-delay: 0.3s; }
+        .person-card:nth-child(4) { animation-delay: 0.4s; }
+        .person-card:nth-child(5) { animation-delay: 0.5s; }
+        .person-card:nth-child(6) { animation-delay: 0.6s; }
+        
+        .person-info {
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+        
+        .person-info .label {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .person-info .value {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .missing-cards {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                margin-left: -250px;
+            }
+            #sidebar.active {
+                margin-left: 0;
+            }
+            .missing-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <img src="{% static 'images/bus.gif' %}" alt="TBSC Icon" class="rounded-circle animate__animated animate__bounceIn" style="width: 60px; height: 60px;">
+            </div>
+            <ul class="list-unstyled components">
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 0.1s;">
+                    <a href="{% url 'admin1' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                </li>
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 0.2s;">
+                    <a href="/addpolice"><i class="fas fa-building"></i> Add Police Stations</a>
+                </li>
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 0.3s;">
+                    <a href="/viewpolice"><i class="fas fa-list"></i> View Police Stations</a>
+                </li>
+                {% comment %} <li class="animate__animated animate__fadeInLeft" style="animation-delay: 0.4s;">
+                    <a href="/viewuser"><i class="fas fa-users"></i> View Users</a>
+                </li> {% endcomment %}
+                <li class="active animate__animated animate__fadeInLeft" style="animation-delay: 0.5s;">
+                    <a href="/missing3"><i class="fas fa-search"></i> All Missing Cases</a>
+                </li>
+                {% comment %} <li class="animate__animated animate__fadeInLeft" style="animation-delay: 0.6s;">
+                    <a href="/surveillance" class="text-warning"><i class="fas fa-camera"></i> Surveillance Mode</a>
+                </li> {% endcomment %}
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <!-- Top Navigation -->
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="navbar-btn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="{% static 'images/boy.png' %}" alt="User" class="rounded-circle" style="width: 40px; height: 40px; border: 2px solid var(--primary-color);">
+                                <span class="ms-2 fw-bold">Admin</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownMenuLink">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <div class="container-fluid px-4">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="h3 mb-4 text-gray-800 animate__animated animate__fadeIn">Missing Persons Management</h1>
+                        
+                        <div class="card animate__animated animate__fadeInUp">
+                            <div class="card-header main-card">
+                                <div class="main-card-header">
+                                    <div>
+                                        <i class="fas fa-search"></i> Missing Persons Cases
+                                    </div>
+                                    <a href="#" class="btn btn-add">
+                                        <i class="fas fa-plus"></i> Add New Case
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Search Bar -->
+                                <div class="search-container">
+                                    <form id="searchForm" method="GET" class="d-flex">
+                                        <input type="search" class="search-input" id="box" value="{{ search_query }}" name="search" placeholder="Search By Aadhar Number">
+                                        <button type="button" id="searchButton" class="search-btn">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                
+                                <!-- Missing Persons Grid -->
+                                <div class="missing-cards">
+                                    {% for personobj in missingperson %}
+                                    <div class="card person-card">
+                                        {% if personobj.person.image %}
+                                        <img class="card-img-top" src="{{ personobj.person.image.url }}" alt="Person Image">
+                                        {% else %}
+                                        <div class="text-center p-4 bg-light">
+                                            <i class="fas fa-user-circle fa-5x text-secondary"></i>
+                                            <p class="mt-2">No image available</p>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        <div class="card-body">
+                                            <h5 class="card-title mb-3">
+                                                <i class="fas fa-user me-2 text-primary"></i>
+                                                <span class="person-info">
+                                                    <span class="label">Name:</span> 
+                                                    <span class="value">{{personobj.person.first_name}} {{personobj.person.last_name}}</span>
+                                                </span>
+                                            </h5>
+                                            <div class="person-info mb-2">
+                                                <i class="fas fa-id-card me-2 text-info"></i>
+                                                <span class="label">Aadhar Number:</span> 
+                                                <span class="value">{{personobj.person.aadhar_number}}</span>
+                                            </div>
+                                            <div class="person-info mb-2">
+                                                <i class="fas fa-map-marker-alt me-2 text-danger"></i>
+                                                <span class="label">Missing From:</span> 
+                                                <span class="value">{{personobj.person.missing_from}}</span>
+                                            </div>
+                                            <div class="person-info mb-4">
+                                                <i class="fas fa-phone me-2 text-success"></i>
+                                                <span class="label">Phone Number:</span> 
+                                                <span class="value">{{personobj.person.phone_number}}</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between mt-3">
+                                                <a href="/editperson?id={{personobj.person.id}}" class="btn btn-action btn-edit">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </a>
+                                                <a href="/deleteperson?id={{personobj.person.id}}" class="btn btn-action btn-delete" onclick="return confirm('Are you sure you want to delete this person?');">
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% empty %}
+                                    <div class="col-12">
+                                        <div class="empty-state">
+                                            <i class="fas fa-search"></i>
+                                            <h4>No Missing Persons Found</h4>
+                                            <p>There are no missing persons registered in the system yet.</p>
+                                            <a href="#" class="btn btn-add">
+                                                <i class="fas fa-plus"></i> Add New Case
+                                            </a>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white mt-4">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; FaceTrace Pro 2023</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle Sidebar
+            document.getElementById('sidebarCollapse').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('active');
+                document.getElementById('content').classList.toggle('active');
+            });
+            
+            // Search functionality
+            document.getElementById("searchButton").addEventListener("click", function() {
+                document.getElementById("searchForm").submit();
+            });
+            
+            // Add card hover effects
+            const cards = document.querySelectorAll('.person-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px)';
+                    this.style.boxShadow = '15px 15px 40px #c1c1c1, -15px -15px 40px #ffffff';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '10px 10px 30px #d1d1d1, -10px -10px 30px #ffffff';
+                });
+            });
+            
+            // Add button hover effects
+            const buttons = document.querySelectorAll('.btn-action, .btn-add');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px)';
+                    this.style.boxShadow = '0 0.5rem 1rem 0 rgba(58, 59, 69, 0.3)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 0.125rem 0.25rem 0 rgba(58, 59, 69, 0.2)';
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+

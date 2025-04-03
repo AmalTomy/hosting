@@ -1,0 +1,468 @@
+@startuml Travel Agency Complete Class Diagram
+
+' Style and theme settings
+!theme plain
+skinparam linetype ortho
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+hide circle
+
+' User Management Classes
+class Users {
+    +id: INT
+    +username: VARCHAR(150)
+    +email: VARCHAR(255)
+    +password: VARCHAR(128)
+    +user_type: VARCHAR(10)
+    +status: VARCHAR(8)
+    +loginstatus: VARCHAR(8)
+    +is_police: BOOLEAN
+    +is_staff: BOOLEAN
+    +is_active: BOOLEAN
+    +date_joined: TIMESTAMP
+}
+
+class Customers {
+    +customer_id: INT
+    +email: VARCHAR(255)
+    +first_name: VARCHAR(50)
+    +last_name: VARCHAR(50)
+    +phone: VARCHAR(20)
+    +address: VARCHAR(255)
+    +user_type: VARCHAR(10)
+    +profile_picture: VARCHAR(255)
+    +last_modified: TIMESTAMP
+    +city: VARCHAR(100)
+    +district: VARCHAR(100)
+    +postal_code: VARCHAR(10)
+}
+
+class Moderator {
+    +moderator_id: INT
+    +first_name: VARCHAR(50)
+    +last_name: VARCHAR(50)
+    +mobile: VARCHAR(20)
+    +email: VARCHAR(255)
+    +password: VARCHAR(128)
+    +cv_file: VARCHAR(255)
+    +gst: VARCHAR(15)
+    +pan: VARCHAR(10)
+    +pan_name: VARCHAR(100)
+    +aadhar: VARCHAR(12)
+    +company: VARCHAR(100)
+    +city: VARCHAR(100)
+    +user_type: VARCHAR(10)
+    +status: VARCHAR(10)
+    +district: VARCHAR(100)
+    +address: TEXT
+    +profile_image: VARCHAR(255)
+}
+
+class Agent {
+    +agent_id: INT
+    +first_name: VARCHAR(50)
+    +last_name: VARCHAR(50)
+    +email: VARCHAR(255)
+    +mobile: VARCHAR(20)
+    +company: VARCHAR(100)
+    +location: VARCHAR(100)
+    +document: VARCHAR(255)
+    +profile_image: VARCHAR(255)
+    +address: TEXT
+    +city: VARCHAR(100)
+    +district: VARCHAR(100)
+    +status: VARCHAR(10)
+    +user_type: VARCHAR(10)
+    +created_at: TIMESTAMP
+    +updated_at: TIMESTAMP
+}
+
+class Police {
+    +id: INT
+    +policestation: VARCHAR(100)
+    +address: VARCHAR(255)
+    +location: VARCHAR(100)
+    +phnnum: VARCHAR(20)
+    +status: VARCHAR(20)
+}
+
+' Bus Management Classes
+class Bus {
+    +bus_id: INT
+    +bus_name: VARCHAR(100)
+    +bus_number: VARCHAR(20)
+    +bus_type: VARCHAR(50)
+    +seating_capacity: INT
+    +departure_location: VARCHAR(100)
+    +destination_location: VARCHAR(100)
+    +departure_time: TIME
+    +arrival_time: TIME
+    +date: DATE
+    +arrival_date: DATE
+    +stops: TEXT
+    +ticket_price: DECIMAL(10,2)
+    +bus_image: VARCHAR(255)
+    +status: VARCHAR(20)
+    +schedule_version: INT
+}
+
+class BusImage {
+    +id: INT
+    +image: VARCHAR(255)
+    +uploaded_at: TIMESTAMP
+}
+
+class DriversInfo {
+    +driver_id: INT
+    +name: VARCHAR(100)
+    +license: VARCHAR(255)
+    +email: VARCHAR(255)
+    +contact_number: VARCHAR(20)
+    +image: VARCHAR(255)
+}
+
+class Location {
+    +location_id: INT
+    +source: VARCHAR(100)
+    +source_code: VARCHAR(4)
+    +destination: VARCHAR(100)
+    +destination_code: VARCHAR(4)
+    +stops: TEXT
+}
+
+' Booking and Payment Classes
+class BusBooking {
+    +booking_id: INT
+    +num_tickets: INT
+    +seat_booked: VARCHAR(255)
+    +total_amount: DECIMAL(10,2)
+    +departure_location: VARCHAR(255)
+    +destination: VARCHAR(255)
+    +booking_date: TIMESTAMP
+    +payment_status: VARCHAR(10)
+    +ticket_number: VARCHAR(20)
+    +passenger_details: TEXT
+    +schedule_version: INT
+}
+
+class Payment {
+    +payment_id: INT
+    +stripe_payment_intent_id: VARCHAR(255)
+    +amount: DECIMAL(10,2)
+    +currency: VARCHAR(3)
+    +status: VARCHAR(10)
+    +payment_method: VARCHAR(50)
+    +payment_date: TIMESTAMP
+    +last_updated: TIMESTAMP
+    +card_last4: VARCHAR(4)
+    +card_brand: VARCHAR(20)
+    +refund_id: VARCHAR(255)
+    +refund_amount: DECIMAL(10,2)
+    +refund_date: TIMESTAMP
+}
+
+' Tour Package Classes
+class TourPackage {
+    +id: INT
+    +title: VARCHAR(200)
+    +destination: VARCHAR(100)
+    +duration_nights: INT
+    +duration_days: INT
+    +overview: TEXT
+    +price: DECIMAL(10,2)
+    +category: VARCHAR(20)
+    +has_bus: BOOLEAN
+    +has_hotel: BOOLEAN
+    +has_meals: BOOLEAN
+    +hotel_category: VARCHAR(1)
+    +main_image: VARCHAR(255)
+    +created_at: TIMESTAMP
+    +is_active: BOOLEAN
+}
+
+class PackageDay {
+    +id: INT
+    +day_number: INT
+    +title: VARCHAR(200)
+    +description: TEXT
+    +meals_included: VARCHAR(50)
+    +accommodation: VARCHAR(100)
+    +created_at: TIMESTAMP
+    +updated_at: TIMESTAMP
+}
+
+class PackageActivity {
+    +id: INT
+    +activity_name: VARCHAR(200)
+    +description: TEXT
+    +start_time: TIME
+    +duration: VARCHAR(50)
+    +location: VARCHAR(100)
+    +included: BOOLEAN
+    +additional_cost: DECIMAL(10,2)
+    +sequence: INT
+}
+
+class PackagePolicy {
+    +id: INT
+    +cancellation_policy: TEXT
+    +refund_policy: TEXT
+    +booking_terms: TEXT
+    +inclusion: TEXT
+    +exclusion: TEXT
+    +created_at: TIMESTAMP
+    +updated_at: TIMESTAMP
+}
+
+class PackageBooking {
+    +booking_id: INT
+    +num_travelers: INT
+    +seat_numbers: VARCHAR(255)
+    +total_amount: DECIMAL(10,2)
+    +booking_date: TIMESTAMP
+    +payment_status: VARCHAR(10)
+    +is_cancelled: BOOLEAN
+    +cancellation_date: TIMESTAMP
+    +refund_amount: DECIMAL(10,2)
+    +passenger_details: JSON
+    +special_requests: TEXT
+    +schedule_version: INT
+}
+
+' Safety and Security Classes
+class SafetyNotification {
+    +id: INT
+    +type: VARCHAR(10)
+    +message: TEXT
+    +location: VARCHAR(100)
+    +created_at: TIMESTAMP
+}
+
+class SafetyNotificationReport {
+    +report_id: INT
+    +report_title: VARCHAR(255)
+    +incident_datetime: TIMESTAMP
+    +location: VARCHAR(255)
+    +latitude: FLOAT
+    +longitude: FLOAT
+    +route: VARCHAR(255)
+    +incident_type: VARCHAR(100)
+    +severity_level: VARCHAR(10)
+    +description: TEXT
+    +submitted_at: TIMESTAMP
+    +status: VARCHAR(10)
+    +stop: VARCHAR(255)
+    +created_at: TIMESTAMP
+    +schedule_version: INT
+}
+
+class MissingPerson {
+    +id: INT
+    +first_name: VARCHAR(100)
+    +last_name: VARCHAR(100)
+    +age: INT
+    +gender: VARCHAR(1)
+    +date_of_birth: DATE
+    +address: TEXT
+    +image: VARCHAR(255)
+    +aadhar_number: VARCHAR(12)
+    +missing_from: DATE
+    +location: VARCHAR(100)
+    +date_reported: TIMESTAMP
+    +status: VARCHAR(20)
+    +is_finished: BOOLEAN
+}
+
+' Additional Classes
+class Notification {
+    +id: INT
+    +message: VARCHAR(255)
+    +created_at: TIMESTAMP
+    +is_read: BOOLEAN
+}
+
+class ChatMessage {
+    +id: INT
+    +content: TEXT
+    +timestamp: TIMESTAMP
+    +is_read: BOOLEAN
+}
+
+class Feedback {
+    +id: INT
+    +bus_name: VARCHAR(255)
+    +bus_route: VARCHAR(255)
+    +travel_date: DATE
+    +rating: INT
+    +comment: TEXT
+    +improvements: TEXT
+    +recommend: VARCHAR(3)
+    +created_at: TIMESTAMP
+}
+
+class BusReschedule {
+    +id: INT
+    +old_departure_location: VARCHAR(100)
+    +old_destination_location: VARCHAR(100)
+    +old_departure_date: DATE
+    +old_departure_time: TIME
+    +old_arrival_date: DATE
+    +old_arrival_time: TIME
+    +old_stops: TEXT
+    +old_ticket_price: DECIMAL(10,2)
+    +new_departure_location: VARCHAR(100)
+    +new_destination_location: VARCHAR(100)
+    +new_departure_date: DATE
+    +new_departure_time: TIME
+    +new_arrival_date: DATE
+    +new_arrival_time: TIME
+    +new_stops: TEXT
+    +new_ticket_price: DECIMAL(10,2)
+    +rescheduled_at: TIMESTAMP
+    +schedule_version: INT
+}
+
+class UserLocation {
+    +id: INT
+    +latitude: FLOAT
+    +longitude: FLOAT
+    +updated_at: TIMESTAMP
+}
+
+' Missing Classes
+class TravelReport {
+    +id: INT
+    +departure: VARCHAR(100)
+    +destination: VARCHAR(100)
+    +travel_date: DATE
+    +description: TEXT
+    +submitted_at: TIMESTAMP
+    +status: VARCHAR(10)
+}
+
+class ReportPhoto {
+    +id: INT
+    +image: VARCHAR(255)
+    +caption: VARCHAR(255)
+    +classification: VARCHAR(50)
+}
+
+class AgentJob {
+    +job_id: INT
+    +selected_stop: VARCHAR(255)
+    +date_assigned: TIMESTAMP
+    +status: VARCHAR(50)
+    +completed_at: TIMESTAMP
+    +original_arrival_date: TIMESTAMP
+}
+
+class SafetyReportMedia {
+    +id: INT
+    +file: VARCHAR(255)
+    +uploaded_at: TIMESTAMP
+}
+
+class Detected {
+    +id: INT
+    +location: VARCHAR(255)
+    +timestamp: TIMESTAMP
+    +confidence_score: FLOAT
+    +image: VARCHAR(255)
+}
+
+class PackageImage {
+    +id: INT
+    +image: VARCHAR(255)
+    +caption: VARCHAR(200)
+    +is_main: BOOLEAN
+    +uploaded_at: TIMESTAMP
+}
+
+' Relationships with better routing and fixed duplicates
+Users "1" -up- "*" Customers
+Users "1" -right- "*" Moderator
+Users "1" -down- "*" Agent
+Users "1" -left- "*" Police
+Users "1" -left- "*" Notification
+Users "1" -up- "*" ChatMessage
+Users "1" -down- "1" UserLocation
+Users "1" -right- "*" MissingPerson
+Users "1" -down- "*" TravelReport
+
+Moderator "1" -right- "*" Bus
+Moderator "1" -down- "*" BusReschedule
+
+Bus "1" -up- "*" BusImage
+Bus "1" -right- "1" DriversInfo
+Bus "*" -down- "*" Location
+Bus "1" -down- "*" BusBooking
+Bus "1" -left- "*" SafetyNotificationReport
+Bus "1" -right- "*" BusReschedule
+Bus "1" -down- "*" PackageBooking
+Bus "1" -left- "*" AgentJob
+
+BusBooking "1" -right- "1" Payment
+BusBooking "1" -left- "1" Feedback
+Customers "1" -down- "*" BusBooking
+Customers "1" -right- "*" PackageBooking
+
+TourPackage "1" -up- "*" PackageDay
+TourPackage "1" -right- "1" PackagePolicy
+TourPackage "1" -down- "*" PackageBooking
+TourPackage "1" -left- "*" PackageImage
+PackageDay "1" -right- "*" PackageActivity
+
+Agent "1" -up- "*" SafetyNotificationReport
+Agent "1" -down- "*" AgentJob
+
+Police "1" -right- "*" MissingPerson
+MissingPerson "1" -right- "*" Detected
+
+TravelReport "1" -right- "*" ReportPhoto
+SafetyNotificationReport "1" -right- "*" SafetyReportMedia
+
+' Layout hints
+together {
+    class Users
+    class Customers
+    class Moderator
+    class Agent
+    class Police
+}
+
+together {
+    class Bus
+    class BusImage
+    class DriversInfo
+    class BusReschedule
+}
+
+together {
+    class TourPackage
+    class PackageDay
+    class PackageActivity
+    class PackagePolicy
+    class PackageBooking
+}
+
+together {
+    class TravelReport
+    class ReportPhoto
+}
+
+together {
+    class SafetyNotificationReport
+    class SafetyReportMedia
+}
+
+together {
+    class MissingPerson
+    class Detected
+}
+
+' Adjust layout to prevent overlapping
+skinparam linetype ortho
+skinparam nodesep 100
+skinparam ranksep 100
+
+@enduml
