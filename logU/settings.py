@@ -207,3 +207,52 @@ SOCIALACCOUNT_LOGIN_ON_GET=True
 
 STRIPE_PUBLIC_KEY = 'pk_test_51OCkghSBuIxwYSiTmCNMdgc0IMrgQHhcAvocnizZpjj6MPVFZ4mYldxbWTAbEFcHN24niT2eQ3ZDMs77Uk5vcVpr00fEoozoND'
 STRIPE_SECRET_KEY = 'sk_test_51OCkghSBuIxwYSiTZeJkEXw2z2OjBvFdQQtmebhs1oIyw1Y3JIqtCQwit6fbirruGnlfnJyGxV17DivYqtK4LyI1000VP3scQg'
+
+
+# Cache settings - use in-memory cache to save resources
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+        'TIMEOUT': 300,  # 5 minutes
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000,
+            'CULL_FREQUENCY': 3,
+        }
+    }
+}
+
+# Session settings
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 86400  # 1 day in seconds
+
+# Optimize database connections
+CONN_MAX_AGE = 600  # 10 minutes
+
+# Disable unused apps in production
+if not DEBUG:
+    INSTALLED_APPS = [app for app in INSTALLED_APPS if app not in [
+        # List any apps you want to disable in production
+    ]]
+
+# Logging configuration to reduce memory usage
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+    },
+}
