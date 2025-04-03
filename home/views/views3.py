@@ -19,10 +19,20 @@ from django.core.files.storage import default_storage
 from django.core.paginator import Paginator
 from django.db.models import Q
 from home.models import TravelReport, ReportPhoto
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import img_to_array
-from PIL import Image
-import numpy as np
+from django.conf import settings
+
+# Conditionally import TensorFlow
+if getattr(settings, 'ENABLE_ML_FEATURES', False):
+    from tensorflow.keras.models import load_model
+    from tensorflow.keras.preprocessing.image import img_to_array
+    from PIL import Image
+    import numpy as np
+else:
+    load_model = None
+    img_to_array = None
+    Image = None
+    np = None
+
 from home.models import TravelReport, ReportPhoto  # Add ReportPhoto here
 from django.db import transaction
 import os
@@ -40,21 +50,36 @@ from home.models import Bus, BusReschedule
 from django.utils import timezone
 
 #Load the trained model
-weather_model = load_model(settings.BASE_DIR / 'weather_classification_model.keras')
-
-# Get class names from the training directory
-train_dir = 'D:/project/dataset/train'
-weather_classes = sorted(os.listdir(train_dir))
+if getattr(settings, 'ENABLE_ML_FEATURES', False):
+    try:
+        weather_model = load_model(settings.BASE_DIR / 'weather_classification_model.keras')
+        # Use a relative path or get from settings
+        train_dir = settings.BASE_DIR / 'dataset' / 'train'
+        if os.path.exists(train_dir):
+            weather_classes = sorted(os.listdir(train_dir))
+        else:
+            # Fallback weather classes if directory doesn't exist
+            weather_classes = ["Cloudy", "Foggy", "Rainy", "Shine", "Sunrise"]
+    except Exception as e:
+        print(f"Error loading weather model: {e}")
+        weather_model = None
+        weather_classes = ["Cloudy", "Foggy", "Rainy", "Shine", "Sunrise"]
+else:
+    weather_model = None
+    weather_classes = ["Cloudy", "Foggy", "Rainy", "Shine", "Sunrise"]
 
 def classify_weather(image_path):
-    img = Image.open(image_path).resize((224, 224))
-    img_array = img_to_array(img)
-    img_array = np.expand_dims(img_array, axis=0)
-    img_array /= 255.0
+    if getattr(settings, 'ENABLE_ML_FEATURES', False):
+        img = Image.open(image_path).resize((224, 224))
+        img_array = img_to_array(img)
+        img_array = np.expand_dims(img_array, axis=0)
+        img_array /= 255.0
 
-    prediction = weather_model.predict(img_array)
-    predicted_class = weather_classes[np.argmax(prediction)]
-    return predicted_class
+        prediction = weather_model.predict(img_array)
+        predicted_class = weather_classes[np.argmax(prediction)]
+        return predicted_class
+    else:
+        return None
 
 
 
@@ -213,10 +238,11 @@ def submit_travel_report(request):
                 photo.save()
                 
                 # Use the utility function
-                from home.utils import classify_weather
-                weather_classification = classify_weather(photo.image.path)
-                photo.classification = weather_classification
-                photo.save()
+                if getattr(settings, 'ENABLE_ML_FEATURES', False):
+                    from home.utils import classify_weather
+                    weather_classification = classify_weather(photo.image.path)
+                    photo.classification = weather_classification
+                    photo.save()
                 
             return JsonResponse({
                 'success': True,
@@ -677,7 +703,10 @@ def blogs(request):
     
     # Add weather classification to each report
     for report in approved_reports:
-        report.weather_classification = classify_weather(report.photos.first().image.path) if report.photos.exists() else "Unknown"
+        if getattr(settings, 'ENABLE_ML_FEATURES', False):
+            report.weather_classification = classify_weather(report.photos.first().image.path) if report.photos.exists() else "Unknown"
+        else:
+            report.weather_classification = "Unknown"
     
     context = {
         'approved_reports': approved_reports,
@@ -724,7 +753,10 @@ def blog_detail(request, report_id):
     report = get_object_or_404(TravelReport, id=report_id, status='Approved')
     photos = report.photos.all()
     
-    weather_classification = classify_weather(report.photos.first().image.path) if report.photos.exists() else "Unknown"
+    if getattr(settings, 'ENABLE_ML_FEATURES', False):
+        weather_classification = classify_weather(report.photos.first().image.path) if report.photos.exists() else "Unknown"
+    else:
+        weather_classification = "Unknown"
     
     weather_paragraphs = WEATHER_PARAGRAPHS.get(weather_classification, ["The weather during our journey from {departure} to {destination} was varied and interesting, adding to the overall travel experience."])
     weather_paragraph = random.choice(weather_paragraphs).format(departure=report.departure, destination=report.destination)
