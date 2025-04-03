@@ -28,13 +28,18 @@ def render_to_pdf(template_src, context_dict={}):
 
 def classify_weather(image_path):
     """Lazy loading of TensorFlow and model only when needed"""
+    from django.conf import settings
+    
+    # Check if ML features are enabled
+    if not getattr(settings, 'ENABLE_ML_FEATURES', False):
+        return "Unknown"
+        
     try:
         # Import TensorFlow only when function is called
         import tensorflow as tf
         from tensorflow.keras.preprocessing.image import img_to_array
         from PIL import Image
         import numpy as np
-        from django.conf import settings
         import os
 
         # Load model only when needed
