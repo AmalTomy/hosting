@@ -67,9 +67,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-    'django.contrib.sites.middleware.CurrentSiteMiddleware', 
-    
 ]
+
+if not ON_RENDER:
+    # Only use sites middleware in development
+    MIDDLEWARE.append('django.contrib.sites.middleware.CurrentSiteMiddleware')
 
 ROOT_URLCONF = 'logU.urls'
 
@@ -169,6 +171,9 @@ DEFAULT_FROM_EMAIL = 'amaltomy321@gmail.com'
 
 # Django sites framework setting
 SITE_ID = 1
+
+# django-allauth settings
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # Disable email verification since we're not using the sites framework in production
 
 TWILIO_ACCOUNT_SID = 'ACa7a2f6611c41f82d39f3cdcc9fc0a2fb'
 TWILIO_AUTH_TOKEN = '1d5c259c581172b354336a893ea3e8eb'
