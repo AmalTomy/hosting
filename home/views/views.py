@@ -30,7 +30,33 @@ import stripe
 import os
 import re
 import json
-import pandas as pd
+
+# Conditionally import pandas based on ML features flag
+if getattr(settings, 'ENABLE_ML_FEATURES', False):
+    import pandas as pd
+else:
+    # Create a dummy pandas module for compatibility
+    class DummyPd:
+        class DataFrame:
+            def __init__(self, *args, **kwargs):
+                self.data = {}
+            
+            def to_dict(self, *args, **kwargs):
+                return {}
+            
+            @classmethod
+            def from_dict(cls, *args, **kwargs):
+                return cls()
+            
+            def to_csv(self, *args, **kwargs):
+                pass
+            
+            @classmethod
+            def read_csv(cls, *args, **kwargs):
+                return cls()
+    
+    pd = DummyPd()
+
 from datetime import date, datetime, timedelta
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -47,10 +73,6 @@ from django.db import IntegrityError
 from django.views.decorators.http import require_GET
 from home.models import Bus
 from home.models import Police
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
-from home.models import PackageBooking
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -753,8 +775,6 @@ def signup_moderator(request):
             return render(request, 'mod_reg.html', {'errors': errors})
     return render(request, 'mod_reg.html')
 
-
-
 @login_required
 def mod_profile(request):
     try:
@@ -1352,6 +1372,10 @@ logger = logging.getLogger(__name__)
 from django.http import JsonResponse
 from django.db.models import Avg, Count
 from home.models import Feedback, Bus
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from home.models import PackageBooking
 
 def all_bus_reviews(request, bus_id):
     try:
@@ -1430,8 +1454,6 @@ def add_locations(request):
             return JsonResponse({'success': False, 'message': f'Error adding location: {str(e)}'})
     
     return render(request, 'add_locations.html')
-
-
 
 @require_POST
 @transaction.atomic
