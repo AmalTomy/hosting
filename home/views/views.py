@@ -54,121 +54,61 @@ from home.models import PackageBooking
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-import google.generativeai as genai
-
-# Configure Gemini AI directly
-genai.configure(api_key='AIzaSyBA91qyfUIIkA8_nGOcjPNPDVSjBjG4HGE')  # Replace with your actual API key
 
 import logging
 logger = logging.getLogger(__name__)
 
 class ChatbotResponse:
     def __init__(self):
-        try:
-            self.model = genai.GenerativeModel('gemini-2.0-flash')
-            self.context = """You are Maya, a friendly and helpful travel assistant for LogU Travel Agency. 
-            Your personality traits:
-            - Warm and welcoming
-            - Patient and understanding
-            - Enthusiastic about helping with travel plans
-            - Professional but conversational
-            - Uses emojis occasionally to be friendly
-            - Keeps responses concise but informative
-
-            Important Links (Always provide these as clickable HTML links):
-            - Booking Page: <a href='/booking/'>Click here to book tickets</a>
-            - My Trips: <a href='/your-bookings/'>View your bookings</a>
-            - Support: <a href='/support/'>Get help</a>
-
-            When helping users:
-            1. Always greet them warmly
-            2. For bookings: Provide the booking page link and guide them through the process
-            3. For viewing bookings: Share the My Trips link
-            4. For payments: Explain our secure payment options (cards and UPI through Stripe)
-            5. For cancellations: Share the My Trips link and explain the process
-            6. For support: Provide our contact details (support@logu.com, +1-234-567-8900)
-
-            Some example responses:
-            - For booking help: "I'll be happy to help you book your trip! 🚌 You can <a href='/booking/'>click here to go to our booking page</a>. Let me guide you through the process..."
-            - For checking bookings: "You can <a href='/your-bookings/'>view all your bookings here</a>. Need help finding a specific booking?"
-            - For support: "Need assistance? <a href='/support/'>Visit our support page</a> or contact our team at support@logu.com"
-
-            Remember to:
-            - Always provide clickable links when mentioning pages
-            - Ask clarifying questions if needed
-            - Keep the conversation flowing naturally
-            """
-            self.chat = self.model.start_chat(history=[])
-            response = self.chat.send_message(self.context)
-            if not response:
-                raise Exception("Failed to initialize chat with context")
-            self.use_ai = True
-            logger.info("Successfully initialized Gemini AI chatbot")
-        except Exception as e:
-            logger.error(f"Failed to initialize Gemini AI: {str(e)}")
-            self.use_ai = False
-            # Initialize fallback responses
-            self.responses = {
-                "booking": {
-                    "keywords": ["book", "reserve", "schedule", "ticket"],
-                    "response": "To make a booking, you can use our online booking system on the homepage. "
-                               "We'll need your travel dates, destination, and number of travelers. "
-                               "Would you like me to guide you through the process?"
-                },
-                "cancellation": {
-                    "keywords": ["cancel", "refund", "terminate", "void"],
-                    "response": "You can cancel your booking through 'My Trips' section. "
-                               "Refunds are typically processed within 5-7 business days. "
-                               "Would you like to know about our cancellation policy?"
-                },
-                "rescheduling": {
-                    "keywords": ["reschedule", "change date", "modify", "change booking"],
-                    "response": "To reschedule your trip, go to 'My Trips' and select the booking you want to modify. "
-                               "Changes made at least 48 hours before departure usually don't incur extra charges."
-                },
-                "payment": {
-                    "keywords": ["payment", "pay", "cost", "price", "fee"],
-                    "response": "We accept various payment methods including credit/debit cards and UPI. "
-                               "All payments are processed securely through Stripe. "
-                               "Would you like to know more about our payment options?"
-                },
-                "safety": {
-                    "keywords": ["safe", "security", "covid", "health", "protection"],
-                    "response": "Your safety is our top priority! We follow all health and safety guidelines, "
-                               "and our vehicles are regularly sanitized. We also have a 24/7 alert system "
-                               "for any safety-related updates."
-                },
-                "contact": {
-                    "keywords": ["contact", "support", "help", "phone", "email"],
-                    "response": "Our customer support team is available 24/7. You can reach us at: "
-                               "Email: support@logu.com "
-                               "Phone: +1-234-567-8900"
-                }
+        # Simple rule-based chatbot without Generative AI
+        logger.info("Initializing simple rule-based chatbot")
+        # Initialize responses
+        self.responses = {
+            "booking": {
+                "keywords": ["book", "reserve", "schedule", "ticket"],
+                "response": "To make a booking, you can use our online booking system on the homepage. "
+                           "We'll need your travel dates, destination, and number of travelers. "
+                           "Would you like me to guide you through the process?"
+            },
+            "cancellation": {
+                "keywords": ["cancel", "refund", "terminate", "void"],
+                "response": "You can cancel your booking through 'My Trips' section. "
+                           "Refunds are typically processed within 5-7 business days. "
+                           "Would you like to know about our cancellation policy?"
+            },
+            "rescheduling": {
+                "keywords": ["reschedule", "change date", "modify", "change booking"],
+                "response": "To reschedule your trip, go to 'My Trips' and select the booking you want to modify. "
+                           "Changes made at least 48 hours before departure usually don't incur extra charges."
+            },
+            "payment": {
+                "keywords": ["payment", "pay", "cost", "price", "fee"],
+                "response": "We accept various payment methods including credit/debit cards and UPI. "
+                           "All payments are processed securely through Stripe. "
+                           "Would you like to know more about our payment options?"
+            },
+            "safety": {
+                "keywords": ["safe", "security", "covid", "health", "protection"],
+                "response": "Your safety is our top priority! We follow all health and safety guidelines, "
+                           "and our vehicles are regularly sanitized. We also have a 24/7 alert system "
+                           "for any safety-related updates."
+            },
+            "contact": {
+                "keywords": ["contact", "support", "help", "phone", "email"],
+                "response": "Our customer support team is available 24/7. You can reach us at: "
+                           "Email: support@logu.com "
+                           "Phone: +1-234-567-8900"
+            },
+            "missing": {
+                "keywords": ["missing", "lost", "find", "person", "locate", "face", "recognition"],
+                "response": "Our face recognition system can help identify missing persons. Please report any missing "
+                           "person cases to the nearest police station or use our 'Report Missing Person' feature."
             }
+        }
 
     def get_response(self, message):
-        """Get response using Gemini AI or fallback to keyword matching"""
-        if self.use_ai:
-            try:
-                logger.info(f"Sending message to Gemini AI: {message}")
-                response = self.chat.send_message(message)
-                if not response or not response.text:
-                    raise Exception("Empty response from Gemini AI")
-                logger.info(f"Received response from Gemini AI: {response.text[:100]}...")
-                return {
-                    "status": "success",
-                    "reply": response.text,
-                    "intent": "ai_response"
-                }
-            except Exception as e:
-                logger.error(f"Gemini AI Error: {str(e)}")
-                return self._get_fallback_response(message)
-        else:
-            logger.info("Using fallback response system")
-            return self._get_fallback_response(message)
-
-    def _get_fallback_response(self, message):
-        """Fallback response system using keyword matching"""
+        """Get response using keyword matching"""
+        logger.info(f"Processing message: {message}")
         message = message.lower()
         for intent, data in self.responses.items():
             if any(keyword in message for keyword in data["keywords"]):
@@ -182,7 +122,7 @@ class ChatbotResponse:
         logger.info("No matching intent found, using default response")
         return {
             "status": "success",
-            "reply": "I'm here to help with your travel needs! You can ask me about bookings, cancellations, payments, or our safety measures. What would you like to know? 😊",
+            "reply": "I'm here to help with your travel needs! You can ask me about bookings, cancellations, payments, or our safety measures. What would you like to know?",
             "intent": "default"
         }
 
@@ -1300,7 +1240,6 @@ def bus_list(request):
         # Calculate available seats
         booked_seats = BusBooking.objects.filter(
             bus=bus, 
-            schedule_version=bus.schedule_version,
             payment_status__in=['Paid', 'Pending']
         ).aggregate(total_booked=Sum('num_tickets'))['total_booked'] or 0
         
@@ -1309,7 +1248,6 @@ def bus_list(request):
         # Get all booked seat numbers
         booked_seat_numbers = BusBooking.objects.filter(
             bus=bus, 
-            schedule_version=bus.schedule_version,
             payment_status__in=['Paid', 'Pending']
         ).values_list('seat_booked', flat=True)
         
@@ -1363,7 +1301,6 @@ def get_booked_seats(request, bus_id):
         bus = get_object_or_404(Bus, pk=bus_id)
         booked_seats = BusBooking.objects.filter(
             bus=bus,
-            schedule_version=bus.schedule_version,
             payment_status__in=['Paid', 'Pending']
         ).values_list('seat_booked', flat=True)
         
