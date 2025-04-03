@@ -148,9 +148,11 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
+# Use a simpler storage backend on Render to avoid manifest issues
+if ON_RENDER:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+else:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -212,12 +214,10 @@ SOCIALACCOUNT_PROVIDERS = {
 
 # Additional settings for email verification and sign up
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# Use 'none' in production to avoid dependency on sites framework
+ACCOUNT_EMAIL_VERIFICATION = 'none' if ON_RENDER else 'mandatory'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False
-SOCIALACCOUNT_LOGIN_ON_GET=True
-
-
 SOCIALACCOUNT_LOGIN_ON_GET=True
 
 
