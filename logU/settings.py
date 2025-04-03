@@ -99,15 +99,24 @@ LOGIN_URL='login'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# For Render deployment, use PostgreSQL if available, otherwise use SQLite
+# Note that SQLite on Render is ephemeral and will be reset between deployments
+if ON_RENDER:
+    # Use SQLite but in a persistent directory
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join('/data', 'db.sqlite3'),  # Render persistent disk
+        }
     }
-}
-
+else:
+    # Local development database
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
