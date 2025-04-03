@@ -167,7 +167,8 @@ EMAIL_HOST_USER = 'amaltomy321@gmail.com'
 EMAIL_HOST_PASSWORD='mqhi mmoe ucqk dzjj'
 DEFAULT_FROM_EMAIL = 'amaltomy321@gmail.com'
 
-SITE_ID = 1 
+# Django sites framework setting
+SITE_ID = 1
 
 TWILIO_ACCOUNT_SID = 'ACa7a2f6611c41f82d39f3cdcc9fc0a2fb'
 TWILIO_AUTH_TOKEN = '1d5c259c581172b354336a893ea3e8eb'
