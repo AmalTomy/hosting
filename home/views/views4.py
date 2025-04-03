@@ -3,21 +3,30 @@ from home.models import Users
 import datetime
 import re
 from django.contrib.auth.hashers import make_password
-import face_recognition
-import cv2
+from django.conf import settings
+# Conditionally import face recognition
+if getattr(settings, 'ENABLE_ML_FEATURES', False):
+    import face_recognition
+    import cv2
+    import numpy as np
+    from PIL import Image
+else:
+    face_recognition = None
+    cv2 = None
+    np = None
+    Image = None
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.core.mail import send_mail
 import random
 import string
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.files.base import ContentFile
 from io import BytesIO
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
-import numpy as np
 import time
 from ..models import Police
 from ..models import MissingPerson
@@ -31,9 +40,6 @@ from django.http import JsonResponse
 account_sid = 'AC09b6c386c220d7d6cbd24145c9f22b41'
 auth_token = 'aa31693c5cec3f4cbfcacf1d414ea9fe'
 smsclient = Client(account_sid, auth_token)
-import cv2
-import numpy as np
-from PIL import Image
 import io
 import threading
 import queue
@@ -42,42 +48,46 @@ import time
 def process_image(image_path, result_queue):
     try:
         # Load and resize image if needed
-        img = Image.open(image_path)
-        
-        # Convert RGBA to RGB if needed
-        if img.mode == 'RGBA':
-            img = img.convert('RGB')
-        
-        # Calculate new size while maintaining aspect ratio
-        max_size = 1200  # Increased max size
-        ratio = min(max_size/float(img.size[0]), max_size/float(img.size[1]))
-        new_size = tuple([int(x*ratio) for x in img.size])
-        
-        # Only resize if image is larger than max_size
-        if max(img.size) > max_size:
-            img = img.resize(new_size, Image.Resampling.LANCZOS)
-        
-        # Convert to numpy array
-        img_array = np.array(img)
-        
-        # Try different detection methods
-        face_locations = []
-        
-        # Method 1: Try HOG with normal parameters
-        face_locations = face_recognition.face_locations(img_array, model="hog", number_of_times_to_upsample=1)
-        
-        # Method 2: If no face found, try CNN model (more accurate but slower)
-        if not face_locations:
-            try:
-                face_locations = face_recognition.face_locations(img_array, model="cnn")
-            except:
-                pass
-        
-        # Method 3: If still no face, try HOG with more lenient parameters
-        if not face_locations:
-            face_locations = face_recognition.face_locations(img_array, model="hog", number_of_times_to_upsample=2)
-        
-        result_queue.put(('success', len(face_locations) > 0))
+        if Image is not None:
+            img = Image.open(image_path)
+            
+            # Convert RGBA to RGB if needed
+            if img.mode == 'RGBA':
+                img = img.convert('RGB')
+            
+            # Calculate new size while maintaining aspect ratio
+            max_size = 1200  # Increased max size
+            ratio = min(max_size/float(img.size[0]), max_size/float(img.size[1]))
+            new_size = tuple([int(x*ratio) for x in img.size])
+            
+            # Only resize if image is larger than max_size
+            if max(img.size) > max_size:
+                img = img.resize(new_size, Image.Resampling.LANCZOS)
+            
+            # Convert to numpy array
+            img_array = np.array(img)
+            
+            # Try different detection methods
+            face_locations = []
+            
+            # Method 1: Try HOG with normal parameters
+            if face_recognition is not None:
+                face_locations = face_recognition.face_locations(img_array, model="hog", number_of_times_to_upsample=1)
+            
+            # Method 2: If no face found, try CNN model (more accurate but slower)
+            if face_recognition is not None and not face_locations:
+                try:
+                    face_locations = face_recognition.face_locations(img_array, model="cnn")
+                except:
+                    pass
+            
+            # Method 3: If still no face, try HOG with more lenient parameters
+            if face_recognition is not None and not face_locations:
+                face_locations = face_recognition.face_locations(img_array, model="hog", number_of_times_to_upsample=2)
+            
+            result_queue.put(('success', len(face_locations) > 0))
+        else:
+            result_queue.put(('error', 'Face recognition is not enabled'))
     except Exception as e:
         result_queue.put(('error', str(e)))
 
@@ -292,44 +302,45 @@ def reportpolice(request):
                 
                 try:
                     # Load and preprocess the image
-                    face_image = face_recognition.load_image_file(person.image.path)
-                    
-                    # Try multiple detection methods
-                    face_locations = []
-                    
-                    # Method 1: Try default HOG method
-                    face_locations = face_recognition.face_locations(face_image, model="hog")
-                    if face_locations:
-                        face_detected = True
-                        detection_method = "HOG"
-                    
-                    if not face_detected:
-                        # Method 2: Try CNN method if available
-                        try:
-                            face_locations = face_recognition.face_locations(face_image, model="cnn")
-                            if face_locations:
-                                face_detected = True
-                                detection_method = "CNN"
-                        except Exception as e:
-                            logger.warning(f"CNN detection failed: {str(e)}")
-                    
-                    if not face_detected:
-                        # Method 3: Try with OpenCV's Haar cascade
-                        import cv2
-                        img = cv2.imread(person.image.path)
-                        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-                        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-                        if len(faces) > 0:
-                            face_locations = [(y, x + w, y + h, x) for (x, y, w, h) in faces]
+                    if face_recognition is not None:
+                        face_image = face_recognition.load_image_file(person.image.path)
+                        
+                        # Try multiple detection methods
+                        face_locations = []
+                        
+                        # Method 1: Try default HOG method
+                        face_locations = face_recognition.face_locations(face_image, model="hog")
+                        if face_locations:
                             face_detected = True
-                            detection_method = "Cascade"
-                    
-                    # Log the detection result
-                    if face_detected:
-                        logger.info(f"Face detected using {detection_method} method")
-                    else:
-                        logger.warning("No face detected in the image")
+                            detection_method = "HOG"
+                        
+                        if not face_detected:
+                            # Method 2: Try CNN method if available
+                            try:
+                                face_locations = face_recognition.face_locations(face_image, model="cnn")
+                                if face_locations:
+                                    face_detected = True
+                                    detection_method = "CNN"
+                            except Exception as e:
+                                logger.warning(f"CNN detection failed: {str(e)}")
+                        
+                        if not face_detected:
+                            # Method 3: Try with OpenCV's Haar cascade
+                            if cv2 is not None:
+                                img = cv2.imread(person.image.path)
+                                gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                                face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+                                faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+                                if len(faces) > 0:
+                                    face_locations = [(y, x + w, y + h, x) for (x, y, w, h) in faces]
+                                    face_detected = True
+                                    detection_method = "Cascade"
+                        
+                        # Log the detection result
+                        if face_detected:
+                            logger.info(f"Face detected using {detection_method} method")
+                        else:
+                            logger.warning("No face detected in the image")
                     
                 except Exception as e:
                     logger.error(f"Face detection error: {str(e)}")
@@ -624,19 +635,20 @@ def detect(request):
                     continue
                     
                 print(f"Loading image for person {person.id} from {person.image.path}")
-                img = face_recognition.load_image_file(person.image.path)
-                face_locations = face_recognition.face_locations(img)
-                if not face_locations:
-                    print(f"No face found in image for person {person.id}")
-                    continue
-                    
-                face_encodings = face_recognition.face_encodings(img, face_locations)
-                if face_encodings:
-                    known_images[person.id] = {
-                        'encoding': face_encodings[0],
-                        'person': person
-                    }
-                    print(f"Successfully loaded face encoding for person {person.id}")
+                if face_recognition is not None:
+                    img = face_recognition.load_image_file(person.image.path)
+                    face_locations = face_recognition.face_locations(img)
+                    if not face_locations:
+                        print(f"No face found in image for person {person.id}")
+                        continue
+                        
+                    face_encodings = face_recognition.face_encodings(img, face_locations)
+                    if face_encodings:
+                        known_images[person.id] = {
+                            'encoding': face_encodings[0],
+                            'person': person
+                        }
+                        print(f"Successfully loaded face encoding for person {person.id}")
             except Exception as e:
                 print(f"Error processing image for person {person.id}: {str(e)}")
                 continue
@@ -666,57 +678,59 @@ def detect(request):
             
             # Resize frame for faster processing
             small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+            
             rgb_frame = cv2.cvtColor(small_frame, cv2.COLOR_BGR2RGB)
             
-            face_locations = face_recognition.face_locations(rgb_frame)
-            face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
-            
-            # Scale back the face locations
-            face_locations = [(top * 4, right * 4, bottom * 4, left * 4) 
-                            for (top, right, bottom, left) in face_locations]
-            
-            for face_encoding, (top, right, bottom, left) in zip(face_encodings, face_locations):
-                matches = face_recognition.compare_faces(known_face_encodings, face_encoding, tolerance=0.60)
-                face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
+            if face_recognition is not None:
+                face_locations = face_recognition.face_locations(rgb_frame)
+                face_encodings = face_recognition.face_encodings(rgb_frame, face_locations)
                 
-                name = "Unknown"
-                color = (0, 0, 255)  # Red for unknown faces
-                matched_person = None
+                # Scale back the face locations
+                face_locations = [(top * 4, right * 4, bottom * 4, left * 4) 
+                                for (top, right, bottom, left) in face_locations]
                 
-                if True in matches:
-                    best_match_index = face_distances.argmin()
-                    if face_distances[best_match_index] < 0.60:
-                        person_id = known_face_ids[best_match_index]
-                        matched_person = known_images[person_id]['person']
-                        name = f"{matched_person.first_name} {matched_person.last_name}"
-                        color = (0, 255, 0)  # Green for matched faces
-                        
-                        if person_id not in detected:
-                            current_time = datetime.datetime.now()
-                            detected[person_id] = current_time
+                for face_encoding, (top, right, bottom, left) in zip(face_encodings, face_locations):
+                    matches = face_recognition.compare_faces(known_face_encodings, face_encoding, tolerance=0.60)
+                    face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
+                    
+                    name = "Unknown"
+                    color = (0, 0, 255)  # Red for unknown faces
+                    matched_person = None
+                    
+                    if True in matches:
+                        best_match_index = face_distances.argmin()
+                        if face_distances[best_match_index] < 0.60:
+                            person_id = known_face_ids[best_match_index]
+                            matched_person = known_images[person_id]['person']
+                            name = f"{matched_person.first_name} {matched_person.last_name}"
+                            color = (0, 255, 0)  # Green for matched faces
                             
-                            try:
-                                # Save the frame as image
-                                _, buffer = cv2.imencode('.jpg', frame)
-                                image_file = ContentFile(
-                                    buffer.tobytes(),
-                                    name=f"{person_id}_{current_time.strftime('%Y%m%d_%H%M%S')}.jpg"
-                                )
+                            if person_id not in detected:
+                                current_time = datetime.datetime.now()
+                                detected[person_id] = current_time
                                 
-                                # Save the detection record
-                                detection = Detected.objects.create(
-                                    case_id=person_id,
-                                    image=image_file,
-                                    timestamp=current_time.strftime("%d-%m-%Y (%I:%M %p)")
-                                )
-                                
-                                # Send WhatsApp notification (text only)
-                                msg = f"ALERT: {name} (Case ID: {person_id}) was detected on camera at {current_time.strftime('%I:%M %p, %d-%m-%Y')}"
-                                send_message(None, msg)
-                                print("WhatsApp notification sent")
-                                
-                            except Exception as e:
-                                print(f"Error in detection handling: {str(e)}")
+                                try:
+                                    # Save the frame as image
+                                    _, buffer = cv2.imencode('.jpg', frame)
+                                    image_file = ContentFile(
+                                        buffer.tobytes(),
+                                        name=f"{person_id}_{current_time.strftime('%Y%m%d_%H%M%S')}.jpg"
+                                    )
+                                    
+                                    # Save the detection record
+                                    detection = Detected.objects.create(
+                                        case_id=person_id,
+                                        image=image_file,
+                                        timestamp=current_time.strftime("%d-%m-%Y (%I:%M %p)")
+                                    )
+                                    
+                                    # Send WhatsApp notification (text only)
+                                    msg = f"ALERT: {name} (Case ID: {person_id}) was detected on camera at {current_time.strftime('%I:%M %p, %d-%m-%Y')}"
+                                    send_message(None, msg)
+                                    print("WhatsApp notification sent")
+                                    
+                                except Exception as e:
+                                    print(f"Error in detection handling: {str(e)}")
                 
                 # Draw the box and name for every face
                 cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
