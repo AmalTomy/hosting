@@ -5,8 +5,8 @@ set -o errexit
 # Set environment variable to indicate we're on Render
 export RENDER=True
 
-# Install dependencies
-pip install -r requirements.txt
+# Install dependencies from production-specific requirements file
+pip install -r requirements-prod.txt
 
 # Collect static files
 python manage.py collectstatic --no-input
