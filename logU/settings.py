@@ -20,10 +20,16 @@ DOMAIN='127.0.0.1:8000'
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9%jr3gvaliclxghocx!3plwtt#_6wf=x%=#sm4gntyb(sdrt8x'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-9%jr3gvaliclxghocx!3plwtt#_6wf=x%=#sm4gntyb(sdrt8x')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
+# Determine if running on Render
+ON_RENDER = os.environ.get('RENDER', False)
+
+# Flag to enable/disable ML features
+ENABLE_ML_FEATURES = not ON_RENDER  # Disable ML in production on Render
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost,hosting-kq0v.onrender.com,.onrender.com').split(',')
 
@@ -138,7 +144,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Add this line
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -163,6 +169,7 @@ DEFAULT_FROM_EMAIL = 'amaltomy321@gmail.com'
 
 SITE_ID = 1 
 
+TWILIO_ACCOUNT_SID = 'ACa7a2f6611c41f82d39f3cdcc9fc0a2fb'
 TWILIO_AUTH_TOKEN = '1d5c259c581172b354336a893ea3e8eb'
 TWILIO_PHONE_NUMBER = '+12089032893'
 
@@ -179,7 +186,10 @@ LOGIN_REDIRECT_URL = '/welcome'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        
+        'APP': {
+            'client_id': '154954218357-uko4l2e703urciu6801batsh8g0gqfna.apps.googleusercontent.com',
+            'secret': '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',
+        },
         'SCOPE': [
             'profile',
             'email',
@@ -207,7 +217,6 @@ SOCIALACCOUNT_LOGIN_ON_GET=True
 
 STRIPE_PUBLIC_KEY = 'pk_test_51OCkghSBuIxwYSiTmCNMdgc0IMrgQHhcAvocnizZpjj6MPVFZ4mYldxbWTAbEFcHN24niT2eQ3ZDMs77Uk5vcVpr00fEoozoND'
 STRIPE_SECRET_KEY = 'sk_test_51OCkghSBuIxwYSiTZeJkEXw2z2OjBvFdQQtmebhs1oIyw1Y3JIqtCQwit6fbirruGnlfnJyGxV17DivYqtK4LyI1000VP3scQg'
-
 
 # Cache settings - use in-memory cache to save resources
 CACHES = {
